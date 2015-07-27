@@ -44,7 +44,7 @@ public class BinaryHeap {
     }
 
     /**
-     * Removes the minimum value value.
+     * Removes the minimum value.
      * It does this by extracting the root, then moving the last value in to the roots
      * place and then heaping it down until the heap property is restored.
      * @return the minimum value value as int.
