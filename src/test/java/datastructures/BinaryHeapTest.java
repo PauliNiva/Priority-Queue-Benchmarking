@@ -70,4 +70,14 @@ public class BinaryHeapTest {
         Assert.assertEquals(3, heap.deleteMin());
         Assert.assertEquals(Integer.MIN_VALUE, heap.deleteMin());
     }
+
+    @Test
+    public void removingWhenAllValuesAreSame() {
+        heap.insert(3);
+        heap.insert(3);
+        heap.insert(3);
+        Assert.assertEquals(3, heap.deleteMin());
+        heap.deleteMin();
+        Assert.assertEquals(3, heap.deleteMin());
+    }
 }
