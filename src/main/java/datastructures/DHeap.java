@@ -1,21 +1,24 @@
 package datastructures;
 
 
-public class BinaryHeap {
+public class DHeap {
 
     private int[] array;
     private int heapSize;
     private int capacity;
+    private int d;
     private static final int ROOT = 0;
 
     /**
      * Initializes a new empty array.
      * @param arraySize size of the array - how many elements the array can contain.
+     * @param numberOfChilderen number of children an element can have.
      */
-    public BinaryHeap(int arraySize) {
+    public DHeap(int arraySize, int numberOfChilderen) {
         capacity = arraySize;
         array =  new int[capacity];
         heapSize = 0;
+        d = numberOfChilderen;
     }
 
     /**
@@ -44,7 +47,7 @@ public class BinaryHeap {
     }
 
     /**
-     * Removes the minimum value.
+     * Removes the minimum value value.
      * It does this by extracting the root, then moving the last value in to the roots
      * place and then heaping it down until the heap property is restored.
      * @return the minimum value value as int.
@@ -68,7 +71,7 @@ public class BinaryHeap {
      * Checks if the array is empty.
      * @return true if the array is empty, false otherwise.
      */
-    public boolean isEmpty() {
+    public boolean isEmpty( ) {
         return heapSize == 0;
     }
 
@@ -97,29 +100,18 @@ public class BinaryHeap {
      * @param index place where the value that is being moved is at.
      */
     public void siftDown(int index) {
-        int leftChildIndex = getLeftChildIndex(index);
-        int rightChildIndex = getRightChildIndex(index);
-        int minIndex;
-        int tmp;
-        if (rightChildIndex >= heapSize) {
-            if (leftChildIndex >= heapSize) {
-                return;
+        int child;
+        int tmp = array[index];
+        while (getNthChildIndex(index, 1) < heapSize) {
+            child = getMinChild(index);
+            if (array[child] < tmp) {
+                array[index] = array[child];
             } else {
-                minIndex = leftChildIndex;
+                break;
             }
-        } else {
-            if (array[leftChildIndex] <= array[rightChildIndex]) {
-                minIndex = leftChildIndex;
-            } else {
-                minIndex = rightChildIndex;
-            }
+            index = child;
         }
-        if (array[index] > array[minIndex]) {
-            tmp = array[minIndex];
-            array[minIndex] = array[index];
-            array[index] = tmp;
-            siftDown(minIndex);
-        }
+        array[index] = tmp;
     }
 
     /**
@@ -131,29 +123,40 @@ public class BinaryHeap {
     }
 
     /**
-     * Gets the index of the left child.
-     * @param index index of the value whose left child is being get.
-     * @return index of the left child as int.
+     * Method to get the index of the child node with a min value.
+     * @param index index of the node whose child with min value is being get.
+     * @return index of the child node with min value as int.
      */
-    private int getLeftChildIndex(int index) {
-        return 2 * index + 1;
+    private int getMinChild(int index) {
+        int bestCandidate = getNthChildIndex(index, 1);
+        int k = 2;
+        int position = getNthChildIndex(index, k);
+        while ((k <= d) && (position < heapSize)) {
+            if (array[position] < array[bestCandidate]) {
+                bestCandidate = position;
+            }
+            k++;
+            position = getNthChildIndex(index, k);
+        }
+        return bestCandidate;
     }
 
     /**
-     * Gets the index of the right child.
-     * @param index index of the value whose right child is being get.
-     * @return index of the right child as int.
-     */
-    private int getRightChildIndex(int index) {
-        return 2 * index + 2;
-    }
-
-    /**
-     * Gets the elements getParent index.
-     * @param index index of the value whose getParent is being get.
-     * @return index of the getParent as int.
+     * Method to get the index of the parent node.
+     * @param index wehre the node, whose parent is being get, is at.
+     * @return the index of the parent node as int.
      */
     private int getParentIndex(int index) {
-        return (index - 1) / 2;
+        return (index - 1) / d;
+    }
+
+    /**
+     * Method to get the index of the n:th child.
+     * @param index index where the node, whose child is being get, is at.
+     * @param n which numerical child is being get.
+     * @return the index of the n:th child as int.
+     */
+    private int getNthChildIndex(int index, int n) {
+        return d * index + n;
     }
 }
