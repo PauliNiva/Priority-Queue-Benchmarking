@@ -12,13 +12,13 @@ public class DHeap {
     /**
      * Initializes a new empty array.
      * @param arraySize size of the array - how many elements the array can contain.
-     * @param numberOfChilderen number of children an element can have.
+     * @param numberOfChildren number of children an element can have.
      */
-    public DHeap(int arraySize, int numberOfChilderen) {
+    public DHeap(int arraySize, int numberOfChildren) {
         capacity = arraySize;
         array =  new int[capacity];
         heapSize = 0;
-        d = numberOfChilderen;
+        d = numberOfChildren;
     }
 
     /**
