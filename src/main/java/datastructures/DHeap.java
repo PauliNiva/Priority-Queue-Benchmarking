@@ -129,14 +129,14 @@ public class DHeap {
      */
     private int getMinChild(int index) {
         int bestCandidate = getNthChildIndex(index, 1);
-        int k = 2;
-        int position = getNthChildIndex(index, k);
-        while ((k <= d) && (position < heapSize)) {
+        int n = 2;
+        int position = getNthChildIndex(index, n);
+        while ((n <= d) && (position < heapSize)) {
             if (array[position] < array[bestCandidate]) {
                 bestCandidate = position;
             }
-            k++;
-            position = getNthChildIndex(index, k);
+            n++;
+            position = getNthChildIndex(index, n);
         }
         return bestCandidate;
     }
