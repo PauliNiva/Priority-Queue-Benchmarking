@@ -71,7 +71,7 @@ public class DHeap {
      * Checks if the array is empty.
      * @return true if the array is empty, false otherwise.
      */
-    public boolean isEmpty( ) {
+    public boolean isEmpty() {
         return heapSize == 0;
     }
 
