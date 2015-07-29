@@ -31,7 +31,7 @@ public class BinaryHeap {
     }
 
     /**
-     * Finds the value of minimum value in the array.
+     * Finds the minimum value in the array.
      * @return if the array is not empty, it returns the value of minimum value
      * which is at the root. If the array is empty, it returns null.
      */

@@ -34,7 +34,7 @@ public class DHeap {
     }
 
     /**
-     * Finds the value of minimum value in the array.
+     * Finds the minimum value in the array.
      * @return if the array is not empty, it returns the value of minimum value
      * which is at the root. If the array is empty, it returns null.
      */
@@ -47,7 +47,7 @@ public class DHeap {
     }
 
     /**
-     * Removes the minimum value value.
+     * Removes the minimum value.
      * It does this by extracting the root, then moving the last value in to the roots
      * place and then heaping it down until the heap property is restored.
      * @return the minimum value value as int.
