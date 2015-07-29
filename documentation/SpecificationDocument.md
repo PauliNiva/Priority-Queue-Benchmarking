@@ -23,14 +23,17 @@ Performance tests include but are not limited to:
   - insert.
   - findMind.
   - deleteMin.
-  Difference between these optional operations between heaps:
+  
+Difference between these optional operations between heaps:
   - merge (when applicable).
   - decrease key (when applicable).
-  Difference in performance between heaps with inputs:
+  
+Difference in performance between heaps with inputs:
   - that correlate with big and dense graphs.
   - that correlate with small and scarce graphs.
-  Tests include (but are not limited to) finding the shortest path and minimum spanning tree in the said graphs.
-  Additionally D-Heap is tested at least with 1, 2, 3 and 4 as values of d.
+  
+Tests include (but are not limited to) finding the shortest path and minimum spanning tree in the said graphs.
+Additionally D-Heap is tested at least with 1, 2, 3 and 4 as values of d.
   
 More detailed specification of testing can be found in the testing document.
 
