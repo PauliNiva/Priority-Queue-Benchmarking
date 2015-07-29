@@ -58,7 +58,7 @@ D-Heap is a generalization of a binary heap in which the nodes have d children i
 
 Leftist heap:
 
-Leftist heap is a variant of binary heap. very node has an s-value which is the distance to the nearest leaf.
+Leftist heap is a variant of binary heap. Every node has an s-value which is the distance to the nearest leaf.
 In contrast to a binary heap, a leftist tree attempts to be very unbalanced.
 In addition to the heap property, leftist trees have additional property that the right child of each node has the lower s-value.
   - Insert O(log n)
