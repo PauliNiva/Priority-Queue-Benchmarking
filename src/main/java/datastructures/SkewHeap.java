@@ -1,0 +1,127 @@
+package datastructures;
+
+
+public class SkewHeap {
+
+    private Node root;
+
+    /**
+     * Initializes a new empty skew heap.
+     */
+    public SkewHeap() {
+        root = null;
+    }
+
+    /**
+     * Inserts a new node of value x into the heap
+     * by merging it with the existing tree.
+     * @param x value of the node that is being added.
+     */
+    public void insert(int x) {
+        root = merge(new Node(x), root);
+    }
+
+    /**
+     * Finds the minimum value, but does not remove it.
+     * @return the minimum value as int.
+     */
+    public int findMin() {
+        return root.value;
+    }
+
+    /**
+     * Deletes the minimum value.
+     * Then the method merges the subtrees.
+     * @return the deleted minimum value as int.
+     */
+    public int deleteMin( ) {
+        if (isEmpty()) {
+            return Integer.MIN_VALUE;
+        } else {
+            int min = root.value;
+            root = merge(root.leftChild, root.rightChild);
+            return min;
+        }
+    }
+
+    /**
+     * Checks if the heap is empty.
+     * @return true if the heap is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    /**
+     * Empties the heap.
+     */
+    public void clear( ) {
+        root = null;
+    }
+
+    /**
+     * Method to merge two skew heaps together.
+     * @param anotherHeap heap that is being merged with current heap.
+     */
+    public void merge(SkewHeap anotherHeap) {
+        if (this == anotherHeap) {
+            return;
+        } else {
+            root = merge(root, anotherHeap.root);
+            anotherHeap.clear();
+        }
+    }
+
+    /**
+     * Method to merge two nodes together.
+     * @param x node that is being merged.
+     * @param y node that is being merged.
+     * @return
+     */
+    public Node merge(Node x, Node y) {
+        if (x == null) {
+            return y;
+        }
+        if (y == null) {
+            return x;
+        }
+        if (x.value < y.value) {
+            Node tmp = x.rightChild;
+            x.rightChild = x.leftChild;
+            x.leftChild = merge(y, tmp);
+            return x;
+        } else {
+            return merge(y, x);
+        }
+    }
+
+    /**
+     * Class for skew heap nodes.
+     */
+    class Node {
+
+        private int value;
+        private Node leftChild;
+        private Node rightChild;
+
+        /**
+         * Constructs the node only with value.
+         * @param value numerical value being set as int.
+         */
+        public Node(int value) {
+            this(value, null, null);
+        }
+
+        /**
+         * Constructs the node with value, references to both childs.
+         * @param value numerical value being set as int.
+         * @param leftChild reference to nodes left child.
+         * @param rightChild reference to nodes right child.
+         */
+        public Node(int value, Node leftChild, Node rightChild) {
+            this.value = value;
+            this.leftChild = leftChild;
+            this.rightChild = rightChild;
+        }
+    }
+}
