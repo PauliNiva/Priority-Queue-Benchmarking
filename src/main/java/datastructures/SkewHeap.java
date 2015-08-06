@@ -1,6 +1,12 @@
 package datastructures;
 
 
+/**
+ * Skew heap is implemented as a binary tree. In contrast with binary heaps,
+ * there are no structural constraints, so there is no guarantee that the height of the tree is logarithmic.
+ * Only conditions that must be satisfied are that the heap order is enforced and every operation
+ * on two skew heaps must be done using merge.
+ */
 public class SkewHeap {
 
     private Node root;
@@ -73,10 +79,10 @@ public class SkewHeap {
     }
 
     /**
-     * Method to merge two nodes together.
+     * Method to merge two node lists together.
      * @param x node that is being merged.
      * @param y node that is being merged.
-     * @return
+     * @return merged node lists head.
      */
     public Node merge(Node x, Node y) {
         if (x == null) {

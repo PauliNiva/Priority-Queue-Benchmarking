@@ -1,6 +1,9 @@
 package datastructures;
 
-
+/**
+ * Binary heap is implemented as a binary tree with two additional constraints:
+ * It conserves the heap property and the heap is a complete binary tree.
+ */
 public class BinaryHeap {
 
     private int[] array;

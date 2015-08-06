@@ -1,75 +1,106 @@
 package datastructures;
 
-
+/**
+ * Binomial heap is a heap similar to a binary heap but also supports quick merging of two heaps
+ * by using a binomial tree structure. These have to satisfy the binomial heap properties that are,
+ * that each binomial tree in a heap obeys the min-heap property and that there can only be either
+ * one or zero binomial trees for each order, including zero order.
+ */
 public class BinomialHeap {
 
-    private Node root;
-    private int heapSize;
+    private Node min;
 
     /**
-     * Initializes a new empty root.
+     * Initializes a new empty binomial heap.
      */
     public BinomialHeap() {
-        root = null;
-        heapSize = 0;
+        min = null;
     }
 
     /**
-     * Inserts a new node of value x into the root
+     * Inserts a new node of value x into the min
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
      */
     public void insert(int x) {
             Node node = new Node(x);
             if (isEmpty()) {
-                root = node;
-                heapSize++;
+                min = node;
             } else {
                 merge(node);
-                heapSize++;
             }
     }
 
     /**
-     * Finds the minimum of the binomial root.
-     * @return value of the minimum root as int.
+     * Finds the minimum of the binomial min.
+     * @return value of the minimum min as int.
      */
     public int findMin() {
         return findMinRoot().value;
     }
 
     /**
-     * Checks if the root is empty.
-     * @return true if the root is empty, false otherwise.
+     * Method to delete the node with a minimum value.
+     * @return value of the minimum node as int.
      */
-    public boolean isEmpty() {
-        return root == null;
+    public int deleteMin() {
+        if (isEmpty()) {
+            return Integer.MIN_VALUE;
+        } else {
+            Node minRoot = findMinRoot();
+            Node tmp = min;
+            Node tmpPrev = null;
+            while (minRoot.value != tmp.value) {
+                tmpPrev = tmp;
+                tmp = tmp.sibling;
+            }
+            if (tmpPrev == null) {
+                min = tmp.sibling;
+            } else {
+                tmpPrev.sibling = tmp.sibling;
+            }
+            tmp = tmp.child;
+            Node tmpOriginal = tmp;
+            while (tmp != null) {
+                tmp.parent = null;
+                tmp = tmp.sibling;
+            }
+            if ((min == null) && (tmpOriginal == null)) {
+            } else {
+                if (tmpOriginal == null) {
+                } else {
+                    if (min == null) {
+                        min = tmpOriginal.reverseRootList(null);
+                    } else {
+                        merge(tmpOriginal.reverseRootList(null));
+                    }
+                }
+            }
+            return minRoot.value;
+        }
     }
 
     /**
-     * Finds the minimum amongst the roots of the binomial trees.
-     * @return minimum root.
+     * Checks if the min is empty.
+     * @return true if the min is empty, false otherwise.
      */
-    public Node findMinRoot() {
-        Node x = root;
-        Node minRoot = root;
-        int min = x.value;
-        while (x != null) {
-            if (x.value < min) {
-                minRoot = x;
-                min = minRoot.value;
-            }
-            x = x.sibling;
-        }
-        return minRoot;
+    public boolean isEmpty() {
+        return min == null;
+    }
+
+    /**
+     * Empties the heap.
+     */
+    public void clear() {
+        min = null;
     }
 
     /**
      * Method to merge two heaps.
      * @param heap that is being merged.
      */
-    private void merge(Node heap) {
-        Node tmp1 = root;
+    public void merge(Node heap) {
+        Node tmp1 = min;
         Node tmp2 = heap;
         while ((tmp1 != null) && (tmp2 != null)) {
             if (tmp1.degree == tmp2.degree) {
@@ -94,21 +125,21 @@ public class BinomialHeap {
                     tmp1 = tmp2;
                     tmp2 = tmp2.sibling;
                     tmp1.sibling = tmp;
-                    if (tmp == root) {
-                        root = tmp1;
+                    if (tmp == min) {
+                        min = tmp1;
                     }
                 }
             }
         }
         if (tmp1 == null) {
-            tmp1 = root;
+            tmp1 = min;
             while (tmp1.sibling != null) {
                 tmp1 = tmp1.sibling;
             }
             tmp1.sibling = tmp2;
         }
-        Node tmp = root;
-        Node tmpNext = root.sibling;
+        Node tmp = min;
+        Node tmpNext = min.sibling;
         Node tmpPrev = null;
         while (tmpNext != null) {
             if ((tmp.degree != tmpNext.degree) || ((tmpNext.sibling != null) && (tmpNext.sibling.degree == tmp.degree))) {
@@ -123,7 +154,7 @@ public class BinomialHeap {
                     tmp.degree++;
                 } else {
                     if (tmpPrev == null) {
-                        root = tmpNext;
+                        min = tmpNext;
                     } else {
                         tmpPrev.sibling = tmpNext;
                     }
@@ -139,7 +170,26 @@ public class BinomialHeap {
     }
 
     /**
-     * Class for binomial root nodes.
+     * Finds the minimum amongst the roots of the binomial trees.
+     * @return minimum min.
+     */
+    public Node findMinRoot() {
+        Node x = min;
+        Node minRoot = min;
+        int min = x.value;
+        while (x != null) {
+            if (x.value < min) {
+                minRoot = x;
+                min = minRoot.value;
+            }
+            x = x.sibling;
+        }
+        return minRoot;
+    }
+
+
+    /**
+     * Class for binomial min nodes.
      */
     class Node {
         int value;
@@ -149,14 +199,31 @@ public class BinomialHeap {
         Node sibling;
 
         /**
-         * Initializes a new root with value x.
-         * @param x value that the root is initialized with.
+         * Initializes a new min with value x.
+         * @param x value that the min is initialized with.
          */
         public Node(int x) {
             value = x;
             degree = 0;
             parent = null;
             child = null;
+        }
+
+        /**
+         * This is an auxiliary method for deleteMin method.
+         * It reverses the root list.
+         * @param tmp the min node of the root list to be reversed.
+         * @return the min of the reversed root list.
+         */
+        private Node reverseRootList(Node tmp) {
+            Node newHead;
+            if (sibling != null) {
+                newHead = sibling.reverseRootList(this);
+            } else {
+                newHead = this;
+            }
+            sibling = tmp;
+            return newHead;
         }
     }
 }

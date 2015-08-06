@@ -5,17 +5,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BinomialHeapTest {
+public class FibonacciHeapTest {
 
-    BinomialHeap heap;
+    FibonacciHeap heap;
 
     @Before
     public void setUp() {
-        heap = new BinomialHeap();
+        heap = new FibonacciHeap();
     }
 
     @Test
-    public void newBinomialHeapIsEmpty() {
+    public void newFibonacciHeapIsEmpty() {
         Assert.assertTrue(heap.isEmpty());
     }
 
@@ -61,8 +61,8 @@ public class BinomialHeapTest {
     }
 
     @Test
-    public void mergeTwoBinomialHeaps() {
-        BinomialHeap anotherHeap = new BinomialHeap();
+    public void mergeTwoFibonacciHeaps() {
+        FibonacciHeap anotherHeap = new FibonacciHeap();
         heap.insert(23);
         heap.insert(14);
         heap.insert(41);
@@ -81,10 +81,10 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         anotherHeap.insert(543);
         anotherHeap.insert(25);
-        heap.merge(anotherHeap.findMinRoot());
-        Assert.assertEquals(3, heap.deleteMin());
-        Assert.assertEquals(4, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
+        FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
+        Assert.assertEquals(3, mergedHeap.deleteMin());
+        Assert.assertEquals(4, mergedHeap.deleteMin());
+        Assert.assertEquals(5, mergedHeap.deleteMin());
     }
 
     @Test
@@ -106,9 +106,39 @@ public class BinomialHeapTest {
     }
 
     @Test
-    public void mergeTwoBinomialHeapsOfDifferentDegree() {
-        BinomialHeap anotherHeap = new BinomialHeap();
-        heap.insert(34);
+    public void consolidatesTreesBranchesWork() {
+        heap.insert(23);
+        Assert.assertEquals(23, heap.deleteMin());
+        FibonacciHeap anotherHeap = new FibonacciHeap();
+        heap.insert(14);
+        anotherHeap.insert(41);
+        Assert.assertEquals(14, heap.deleteMin());
+        heap.clear();
+        heap.insert(41);
+        anotherHeap.insert(14);
+        FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
+        Assert.assertEquals(14, mergedHeap.deleteMin());
+    }
+
+    @Test
+    public void mergeTwoEmptyFibonacciHeaps() {
+        FibonacciHeap anotherHeap = new FibonacciHeap();
+        FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
+        Assert.assertEquals(Integer.MIN_VALUE, mergedHeap.deleteMin());
+    }
+
+    @Test
+    public void mergeTwoFibonacciHeapsWhenOtherIsEmpty() {
+        FibonacciHeap anotherHeap = new FibonacciHeap();
+        heap.insert(2);
+        FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
+        Assert.assertEquals(2, mergedHeap.deleteMin());
+    }
+
+    @Test
+    public void mergeTwoFibonacciHeapsOfDifferentDegree() {
+        FibonacciHeap anotherHeap = new FibonacciHeap();
+        heap.insert(23);
         heap.insert(5);
         anotherHeap.insert(32);
         anotherHeap.insert(74);
@@ -118,15 +148,15 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         anotherHeap.insert(543);
         anotherHeap.insert(25);
-        heap.merge(anotherHeap.findMinRoot());
-        Assert.assertEquals(3, heap.deleteMin());
-        Assert.assertEquals(4, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
+        FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
+        Assert.assertEquals(3, mergedHeap.deleteMin());
+        Assert.assertEquals(4, mergedHeap.deleteMin());
+        Assert.assertEquals(5, mergedHeap.deleteMin());
     }
 
     @Test
-    public void mergeTwoBinomialHeapsOFDifferentDegreeTheOtherWay() {
-        BinomialHeap anotherHeap = new BinomialHeap();
+    public void mergeTwoFibonacciHeapsOfDifferentDegreeTheOtherWay() {
+        FibonacciHeap anotherHeap = new FibonacciHeap();
         heap.insert(23);
         heap.insert(14);
         heap.insert(41);
@@ -137,13 +167,25 @@ public class BinomialHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        anotherHeap.insert(4);
-        anotherHeap.insert(3);
+        heap.insert(32);
+        heap.insert(74);
+        heap.insert(65);
+        heap.insert(4363);
+        heap.insert(4);
+        heap.insert(3);
         heap.insert(543);
-        heap.insert(25);
-        heap.merge(anotherHeap.findMinRoot());
-        Assert.assertEquals(3, heap.deleteMin());
-        Assert.assertEquals(4, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
+        anotherHeap.insert(25);
+        FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
+        Assert.assertEquals(3, mergedHeap.deleteMin());
+        Assert.assertEquals(4, mergedHeap.deleteMin());
+        Assert.assertEquals(5, mergedHeap.deleteMin());
+    }
+
+    @Test
+    public void mergeTwoFibonacciHeapsWhenOtherIsNull() {
+        FibonacciHeap mergedHeap = heap.merge(heap, null);
+        Assert.assertEquals(Integer.MIN_VALUE, mergedHeap.deleteMin());
+        FibonacciHeap anotherMergedHeap = heap.merge(null, heap);
+        Assert.assertEquals(Integer.MIN_VALUE, anotherMergedHeap.deleteMin());
     }
 }

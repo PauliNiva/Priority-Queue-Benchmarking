@@ -1,6 +1,8 @@
 package datastructures;
 
-
+/**
+ * D-Heap is a generalization of a binary heap in which the nodes have d children instead of two.
+ */
 public class DHeap {
 
     private int[] array;
