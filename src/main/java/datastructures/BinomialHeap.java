@@ -96,7 +96,7 @@ public class BinomialHeap {
     }
 
     /**
-     * Method to merge two heaps.
+     * Method to mergePairs two heaps.
      * @param heap that is being merged.
      */
     public void merge(Node heap) {

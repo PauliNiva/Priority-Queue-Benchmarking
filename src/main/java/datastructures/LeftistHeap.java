@@ -66,7 +66,7 @@ public class LeftistHeap {
     }
 
     /**
-     * Method to merge two Leftist heaps together.
+     * Method to mergePairs two Leftist heaps together.
      * @param anotherHeap heap that is being merged with current heap.
      */
     public void merge(LeftistHeap anotherHeap) {

@@ -80,7 +80,7 @@ public class FibonacciHeap {
     }
 
     /**
-     * Checks if the min is empty.
+     * Checks if the heap is empty.
      * @return true if the min is empty, false otherwise.
      */
     public boolean isEmpty() {
