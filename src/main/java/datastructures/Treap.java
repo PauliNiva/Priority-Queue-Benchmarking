@@ -14,7 +14,7 @@ import java.util.Random;
 public class Treap {
 
     private Node root;
-    private Node nullNode = new Node(Integer.MAX_VALUE, null, null);
+    private static Node nullNode = new Node(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     /**
      * Initializes a new treap with a root as null node.
@@ -147,7 +147,7 @@ public class Treap {
         Node rightChild;
 
         /**
-         * Initializes a new node with x as value
+         * Initializes a new node with x as value.
          * and children as nulls.
          * @param x value of the new node.
          */
@@ -159,7 +159,7 @@ public class Treap {
         }
 
         /**
-         * Initializes a new node with x as value
+         * Initializes a new node with x as value.
          * and children named left and right.
          * @param x value of the new node.
          */
@@ -168,6 +168,18 @@ public class Treap {
             leftChild = left;
             rightChild = right;
             priority = new Random().nextInt();
+        }
+
+        /**
+         * Initializes a new null node.
+         * @param x Value of null node.
+         * @param y Priority of null node.
+         */
+        public Node(int x, int y) {
+            value  = x;
+            leftChild = null;
+            rightChild = null;
+            priority = y;
         }
     }
 }

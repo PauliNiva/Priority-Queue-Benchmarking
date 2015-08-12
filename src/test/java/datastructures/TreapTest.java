@@ -8,6 +8,7 @@ import org.junit.Test;
 public class TreapTest {
 
     Treap treap;
+    Treap.Node node;
 
     @Before
     public void setUp() {
@@ -17,6 +18,11 @@ public class TreapTest {
     @Test
     public void newTreapIsEmpty() {
         Assert.assertTrue(treap.isEmpty());
+    }
+
+    @Test
+    public void emptyTreapFindMinReturnsCorrectly() {
+        Assert.assertEquals(Integer.MAX_VALUE, treap.findMin());
     }
 
     @Test
@@ -59,6 +65,13 @@ public class TreapTest {
         Assert.assertEquals(5, treap.findMin());
         treap.remove(treap.findMin());
         Assert.assertEquals(7, treap.findMin());
+    }
+
+    @Test
+    public void nodeWithOneParameterInitializesCorrectly() {
+        node = new Treap.Node(1);
+        Assert.assertTrue(node.leftChild == null);
+        Assert.assertTrue(node.rightChild == null);
     }
 }
 
