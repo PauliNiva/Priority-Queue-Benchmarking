@@ -121,8 +121,8 @@ public class SkewHeap {
         /**
          * Constructs the node with value, references to both childs.
          * @param value numerical value being set as int.
-         * @param leftChild reference to nodes left child.
-         * @param rightChild reference to nodes right child.
+         * @param leftChild reference to nodes leftChild child.
+         * @param rightChild reference to nodes rightChild child.
          */
         public Node(int value, Node leftChild, Node rightChild) {
             this.value = value;

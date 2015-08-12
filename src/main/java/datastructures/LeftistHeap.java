@@ -5,7 +5,7 @@ package datastructures;
  * Leftist heap is a variant of binary heap. Every node has an s-value which is the distance to the nearest leaf.
  * In contrast to a binary heap, a leftist tree attempts to be very unbalanced.
  * In addition to the heap property, leftist trees have additional property that the
- * right child of each node has the lower s-value.
+ * rightChild child of each node has the lower s-value.
  */
 public class LeftistHeap {
 
@@ -133,8 +133,8 @@ public class LeftistHeap {
          * Constructs the node with value, references to both childs and
          * initial s-value of 0.
          * @param value numerical value being set as int.
-         * @param leftChild reference to nodes left child.
-         * @param rightChild reference to nodes right child.
+         * @param leftChild reference to nodes leftChild child.
+         * @param rightChild reference to nodes rightChild child.
          */
         public Node(int value, Node leftChild, Node rightChild) {
             this.value = value;

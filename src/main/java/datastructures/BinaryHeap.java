@@ -134,18 +134,18 @@ public class BinaryHeap {
     }
 
     /**
-     * Gets the index of the left child.
-     * @param index index of the value whose left child is being get.
-     * @return index of the left child as int.
+     * Gets the index of the leftChild child.
+     * @param index index of the value whose leftChild child is being get.
+     * @return index of the leftChild child as int.
      */
     private int getLeftChildIndex(int index) {
         return 2 * index + 1;
     }
 
     /**
-     * Gets the index of the right child.
-     * @param index index of the value whose right child is being get.
-     * @return index of the right child as int.
+     * Gets the index of the rightChild child.
+     * @param index index of the value whose rightChild child is being get.
+     * @return index of the rightChild child as int.
      */
     private int getRightChildIndex(int index) {
         return 2 * index + 2;
