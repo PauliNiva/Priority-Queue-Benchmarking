@@ -95,12 +95,15 @@ public class SkewHeap implements Heap {
             return x;
         }
         if (x.value < y.value) {
-            Node tmp = x.rightChild;
-            x.rightChild = x.leftChild;
-            x.leftChild = merge(y, tmp);
+            Node tmp = x.leftChild;
+            x.leftChild = merge(x.rightChild, y);
+            x.rightChild = tmp;
             return x;
         } else {
-            return merge(y, x);
+            Node tmp = y.rightChild;
+            y.rightChild = merge(y.leftChild, x);
+            y.leftChild = tmp;
+            return y;
         }
     }
 
