@@ -3,7 +3,7 @@ package datastructures;
 /**
  * D-Heap is a generalization of a binary heap in which the nodes have d children instead of two.
  */
-public class DHeap {
+public class DHeap implements Heap {
 
     private int[] array;
     private int heapSize;
@@ -29,6 +29,7 @@ public class DHeap {
      * Then it heaps it up until the heap property is restored.
      * @param x int that is being inserted.
      */
+    @Override
     public void insert(int x) {
         array[heapSize] = x;
         siftUp(heapSize);
@@ -40,6 +41,7 @@ public class DHeap {
      * @return if the array is not empty, it returns the value of minimum value
      * which is at the root. If the array is empty, it returns null.
      */
+    @Override
     public int findMin() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;
@@ -54,6 +56,7 @@ public class DHeap {
      * place and then heaping it down until the heap property is restored.
      * @return the minimum value value as int.
      */
+    @Override
     public int deleteMin() {
         int removed;
         if (isEmpty()) {

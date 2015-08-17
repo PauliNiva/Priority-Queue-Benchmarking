@@ -4,7 +4,7 @@ package datastructures;
  * Binary heap is implemented as a binary tree with two additional constraints:
  * It conserves the heap property and the heap is a complete binary tree.
  */
-public class BinaryHeap {
+public class BinaryHeap implements Heap {
 
     private int[] array;
     private int heapSize;
@@ -27,6 +27,7 @@ public class BinaryHeap {
      * Then it heaps it up until the heap property is restored.
      * @param x int that is being inserted.
      */
+    @Override
     public void insert(int x) {
         array[heapSize] = x;
         siftUp(heapSize);
@@ -38,6 +39,7 @@ public class BinaryHeap {
      * @return if the array is not empty, it returns the value of minimum value
      * which is at the root. If the array is empty, it returns null.
      */
+    @Override
     public int findMin() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;
@@ -52,6 +54,7 @@ public class BinaryHeap {
      * place and then heaping it down until the heap property is restored.
      * @return the minimum value value as int.
      */
+    @Override
     public int deleteMin() {
         int removed;
         if (isEmpty()) {

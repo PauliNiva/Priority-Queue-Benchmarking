@@ -6,7 +6,7 @@ package datastructures;
  * that each binomial tree in a heap obeys the min-heap property and that there can only be either
  * one or zero binomial trees for each order, including zero order.
  */
-public class BinomialHeap {
+public class BinomialHeap implements Heap {
 
     private Node min;
 
@@ -22,6 +22,7 @@ public class BinomialHeap {
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
      */
+    @Override
     public void insert(int x) {
             Node node = new Node(x);
             if (isEmpty()) {
@@ -35,6 +36,7 @@ public class BinomialHeap {
      * Finds the minimum of the binomial min.
      * @return value of the minimum min as int.
      */
+    @Override
     public int findMin() {
         return findMinRoot().value;
     }
@@ -43,6 +45,7 @@ public class BinomialHeap {
      * Method to delete the node with a minimum value.
      * @return value of the minimum node as int.
      */
+    @Override
     public int deleteMin() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;

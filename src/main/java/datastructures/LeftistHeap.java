@@ -7,7 +7,7 @@ package datastructures;
  * In addition to the heap property, leftist trees have additional property that the
  * rightChild child of each node has the lower s-value.
  */
-public class LeftistHeap {
+public class LeftistHeap implements Heap {
 
     private Node root;
 
@@ -23,6 +23,7 @@ public class LeftistHeap {
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
      */
+    @Override
     public void insert(int x) {
         root = merge(new Node(x), root);
     }
@@ -31,6 +32,7 @@ public class LeftistHeap {
      * Finds the minimum value, but does not remove it.
      * @return the minimum value as int.
      */
+    @Override
     public int findMin() {
         return root.value;
     }
@@ -40,6 +42,7 @@ public class LeftistHeap {
      * Then the method merges the subtrees.
      * @return the deleted minimum value as int.
      */
+    @Override
     public int deleteMin( ) {
         if (isEmpty()) {
             return Integer.MIN_VALUE;

@@ -7,7 +7,7 @@ package datastructures;
  * The only restriction is that this tree is heap ordered, that is, for any node n,
  * the key of n is not larger than the keys of any of its children.
  */
-public class PairingHeap {
+public class PairingHeap implements Heap {
 
     Node root;
     Node[] array = new Node[4];
@@ -23,6 +23,7 @@ public class PairingHeap {
      * Inserts a new node of value x into the heap.
      * @param x value of the node that is being added.
      */
+    @Override
     public void insert(int x) {
         Node node = new Node(x);
         if (isEmpty()) {
@@ -36,6 +37,7 @@ public class PairingHeap {
      * Finds the minimum of the Pairing heap.
      * @return value of the root as int.
      */
+    @Override
     public int findMin() {
         return root.value;
     }
@@ -44,6 +46,7 @@ public class PairingHeap {
      * Deletes the minimum value.
      * @return the deleted minimum value as int.
      */
+    @Override
     public int deleteMin() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;

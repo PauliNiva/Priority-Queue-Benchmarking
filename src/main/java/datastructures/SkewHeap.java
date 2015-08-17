@@ -7,7 +7,7 @@ package datastructures;
  * Only conditions that must be satisfied are that the heap order is enforced and every operation
  * on two skew heaps must be done using mergePairs.
  */
-public class SkewHeap {
+public class SkewHeap implements Heap {
 
     private Node root;
 
@@ -23,6 +23,7 @@ public class SkewHeap {
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
      */
+    @Override
     public void insert(int x) {
         root = merge(new Node(x), root);
     }
@@ -31,6 +32,7 @@ public class SkewHeap {
      * Finds the minimum value, but does not remove it.
      * @return the minimum value as int.
      */
+    @Override
     public int findMin() {
         return root.value;
     }
@@ -40,7 +42,8 @@ public class SkewHeap {
      * Then the method merges the subtrees.
      * @return the deleted minimum value as int.
      */
-    public int deleteMin( ) {
+    @Override
+    public int deleteMin() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;
         } else {

@@ -7,7 +7,7 @@ package datastructures;
  * The trees do not have to be a prescribed shape.
  * This allows postponing the work of some operations to later operations.
  */
-public class FibonacciHeap {
+public class FibonacciHeap implements Heap {
 
     private Node min;
 
@@ -22,6 +22,7 @@ public class FibonacciHeap {
      * Inserts a new node of value x into the heap.
      * @param x value of the node that is being added.
      */
+    @Override
     public void insert(int x) {
         Node node = new Node(x);
         if (isEmpty()) {
@@ -41,6 +42,7 @@ public class FibonacciHeap {
      * Finds the minimum of the Fibonacci heap.
      * @return value of the minimum head as int.
      */
+    @Override
     public int findMin() {
         return min.value;
     }
@@ -50,6 +52,7 @@ public class FibonacciHeap {
      * Then the method consolidates the trees if necessary.
      * @return the deleted minimum value as int.
      */
+    @Override
     public int deleteMin() {
         Node tmp = min;
         if (isEmpty()) {
