@@ -51,6 +51,7 @@ public class ArraySorting {
         long leftist = 0;
         long pairing = 0;
         long skew = 0;
+        long treapTimer = 0;
 
         BinaryHeap binaryHeap = new BinaryHeap(arraySize);
         BinomialHeap binomialHeap = new BinomialHeap();
@@ -62,6 +63,7 @@ public class ArraySorting {
         DHeap binaryHeapD = new DHeap(arraySize, 2);
         DHeap ternaryHeap = new DHeap(arraySize, 3);
         DHeap quaternaryHeap = new DHeap(arraySize, 4);
+        Treap treap = new Treap();
 
         for (int i = 0; i < 10; i++) {
             array = createArrayWithRandomValues(arraySize);
@@ -108,6 +110,10 @@ public class ArraySorting {
             sort(quaternaryHeap);
             quaternary += (System.nanoTime() - startTime);
 
+            startTime = System.nanoTime();
+            sort(treap);
+            treapTimer += (System.nanoTime() - startTime);
+
         }
 
         binary /= 10*1000000;
@@ -120,6 +126,7 @@ public class ArraySorting {
         binaryD /= 10*1000000;
         ternary /= 10*1000000;
         quaternary /= 10*1000000;
+        treapTimer /= 10*1000000;
 
         System.out.println("Average sorting time when the size \nof the array being sorted was " + arraySize + ":\n");
         System.out.println("Binary heap: " + binary + " ms.");
@@ -136,6 +143,7 @@ public class ArraySorting {
         System.out.println("BinaryD heap: " + binaryD + " ms.");
         System.out.println("Ternary heap: " + ternary + " ms.");
         System.out.println("Quaternary heap: " + quaternary + " ms.");
+        System.out.println("Treap: " + treapTimer + " ms.");
         System.out.println();
         System.out.println();
     }

@@ -9,7 +9,7 @@ public class Main {
         arraySorting.arraySortingBenchmark(10000);
         arraySorting.arraySortingBenchmark(30000);
         arraySorting.arraySortingBenchmark(100000);
-        arraySorting.arraySortingBenchmark(1000000);
+        //arraySorting.arraySortingBenchmark(1000000);
     }
 }
 

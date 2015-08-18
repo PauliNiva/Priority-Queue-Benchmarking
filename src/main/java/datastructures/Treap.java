@@ -11,7 +11,7 @@ import java.util.Random;
  * in particular, with high probability its height is proportional to the logarithm of the number of keys,
  * so that each search, insertion, or deletion operation takes logarithmic time to perform.
  */
-public class Treap {
+public class Treap implements Heap {
 
     private Node root;
     private static Node nullNode = new Node(Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -28,6 +28,7 @@ public class Treap {
      * If x is already in treap it does nothing.
      * @param x value of the node that is being inserted.
      */
+    @Override
     public void insert(int x) {
         root = insert(x, root);
     }
@@ -36,6 +37,7 @@ public class Treap {
      * Finds the minimum in the treap.
      * @return if the treap is empty returns Integer.MAX_VALUE, minimum value as int otherwise.
      */
+    @Override
     public int findMin() {
         if (isEmpty()) {
             return Integer.MAX_VALUE;
@@ -45,6 +47,17 @@ public class Treap {
             pointer = pointer.leftChild;
         }
         return pointer.value;
+    }
+
+    /**
+     * Method to delete min node.
+     * @return value of min node as int.
+     */
+    @Override
+    public int deleteMin() {
+        int min = findMin();
+        remove(findMin());
+        return min;
     }
 
     /**
@@ -86,7 +99,6 @@ public class Treap {
     public void remove(int x) {
         root = remove(x, root);
     }
-
 
     /**
      * Auxiliary method that removes node with valuex from a subtreap.

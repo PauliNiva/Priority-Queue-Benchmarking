@@ -82,7 +82,7 @@ public class SkewHeap implements Heap {
     }
 
     /**
-     * Method to mergePairs two node lists together.
+     * Method to merge two node lists together.
      * @param x node that is being merged.
      * @param y node that is being merged.
      * @return merged node lists head.
