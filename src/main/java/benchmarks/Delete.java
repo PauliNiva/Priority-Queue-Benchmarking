@@ -1,11 +1,33 @@
 package benchmarks;
 
+
 import datastructures.*;
+
 import java.util.Random;
 
-public class ArraySorting {
+public class Delete {
 
     private int[] array;
+
+    /**
+     * Method for inserting random values into a heap.
+     * @param heap that is values are being inserted.
+     */
+    private void insert(Heap heap) {
+        for (int i : array) {
+            heap.insert(i);
+        }
+    }
+
+    /**
+     * Method for deleting the values from the heap one by one.
+     * @param heap heap where the values are being deleted.
+     */
+    private void delete(Heap heap) {
+        for (int i = 0; i < array.length; i++) {
+            heap.deleteMin();
+        }
+    }
 
     /**
      * Method for creating an array filled with random values.
@@ -21,26 +43,10 @@ public class ArraySorting {
     }
 
     /**
-     * Method for sorting an array.
-     * @param heap that is being used as an auxiliary datastructure.
-     * @return sorted int array.
-     */
-    private int[] sort(Heap heap) {
-        int[] sortedArray = new int[array.length];
-        for (int i : array) {
-            heap.insert(i);
-        }
-        for (int i = 0; i < array.length; i++){
-            sortedArray[i] = heap.deleteMin();
-        }
-        return sortedArray;
-    }
-
-    /**
-     * Method for benchmarking a sorting of an array with random values.
+     * Method for benchmarking deletes from a heap.
      * @param arraySize size of the array that is being benchmarked.
      */
-    public void arraySortingBenchmark(int arraySize) {
+    public void deleteBenchmark(int arraySize) {
         long binary = 0;
         long unary = 0;
         long binaryD = 0;
@@ -53,84 +59,97 @@ public class ArraySorting {
         long skew = 0;
         long treapTimer = 0;
 
-        BinaryHeap binaryHeap = new BinaryHeap(arraySize);
-        BinomialHeap binomialHeap = new BinomialHeap();
-        FibonacciHeap fibonacciHeap = new FibonacciHeap();
-        LeftistHeap leftistHeap = new LeftistHeap();
-        PairingHeap pairingHeap = new PairingHeap();
-        SkewHeap skewHeap = new SkewHeap();
-        DHeap unaryHeap = new DHeap(arraySize, 1);
-        DHeap binaryHeapD = new DHeap(arraySize, 2);
-        DHeap ternaryHeap = new DHeap(arraySize, 3);
-        DHeap quaternaryHeap = new DHeap(arraySize, 4);
-        Treap treap = new Treap();
-
         for (int i = 0; i < 10; i++) {
             array = createArrayWithRandomValues(arraySize);
+            BinaryHeap binaryHeap = new BinaryHeap(arraySize);
+            BinomialHeap binomialHeap = new BinomialHeap();
+            FibonacciHeap fibonacciHeap = new FibonacciHeap();
+            LeftistHeap leftistHeap = new LeftistHeap();
+            PairingHeap pairingHeap = new PairingHeap();
+            SkewHeap skewHeap = new SkewHeap();
+            DHeap unaryHeap = new DHeap(arraySize, 1);
+            DHeap binaryHeapD = new DHeap(arraySize, 2);
+            DHeap ternaryHeap = new DHeap(arraySize, 3);
+            DHeap quaternaryHeap = new DHeap(arraySize, 4);
+            Treap treap = new Treap();
+
+            insert(binaryHeap);
+            insert(binomialHeap);
+            insert(fibonacciHeap);
+            insert(leftistHeap);
+            insert(pairingHeap);
+            insert(skewHeap);
+            if (arraySize <= 30000) {
+                insert(unaryHeap);
+            }
+            insert(binaryHeapD);
+            insert(ternaryHeap);
+            insert(quaternaryHeap);
+            insert(treap);
 
             long startTime = System.nanoTime();
-            sort(binaryHeap);
+            delete(binaryHeap);
             binary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(binomialHeap);
+            delete(binomialHeap);
             binomial += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(fibonacciHeap);
+            delete(fibonacciHeap);
             fibonacci += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(leftistHeap);
+            delete(leftistHeap);
             leftist += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(pairingHeap);
+            delete(pairingHeap);
             pairing += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(skewHeap);
+            delete(skewHeap);
             skew += (System.nanoTime() - startTime);
 
             if (arraySize <= 30000) {
                 startTime = System.nanoTime();
-                sort(unaryHeap);
+                delete(unaryHeap);
                 unary += (System.nanoTime() - startTime);
             }
 
             startTime = System.nanoTime();
-            sort(binaryHeapD);
+            delete(binaryHeapD);
             binaryD += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(ternaryHeap);
+            delete(ternaryHeap);
             ternary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(quaternaryHeap);
+            delete(quaternaryHeap);
             quaternary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(treap);
+            delete(treap);
             treapTimer += (System.nanoTime() - startTime);
 
         }
 
-        binary /= 10*1000000;
-        binomial /= 10*1000000;
-        fibonacci /= 10*1000000;
-        leftist /= 10*1000000;
-        pairing /= 10*1000000;
-        skew /= 10*1000000;
-        unary /= 10*1000000;
-        binaryD /= 10*1000000;
-        ternary /= 10*1000000;
-        quaternary /= 10*1000000;
-        treapTimer /= 10*1000000;
+        binary /= 10 * 1000000;
+        binomial /= 10 * 1000000;
+        fibonacci /= 10 * 1000000;
+        leftist /= 10 * 1000000;
+        pairing /= 10 * 1000000;
+        skew /= 10 * 1000000;
+        unary /= 10 * 1000000;
+        binaryD /= 10 * 1000000;
+        ternary /= 10 * 1000000;
+        quaternary /= 10 * 1000000;
+        treapTimer /= 10 * 1000000;
 
-        System.out.println("Average sorting time when the size \nof the array being sorted was " + arraySize + ":\n");
-        System.out.println("Binary heap: " + binary + " ms.");
-        System.out.println("Binomial heap: " + binomial + " ms.");
+        System.out.println("Average deleting time when the number \nof the integers being deleted was " + arraySize + ":\n");
+        System.out.println("Binary heap: " + binary + " ns.");
+        System.out.println("Binomial heap: " + binomial + " ns.");
         System.out.println("Fibonacci heap: " + fibonacci + " ms.");
         System.out.println("Leftist heap: " + leftist + " ms.");
         System.out.println("Pairing heap: " + pairing + " ms.");
@@ -147,4 +166,5 @@ public class ArraySorting {
         System.out.println();
         System.out.println();
     }
+
 }

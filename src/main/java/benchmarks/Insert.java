@@ -1,11 +1,22 @@
 package benchmarks;
 
 import datastructures.*;
+
 import java.util.Random;
 
-public class ArraySorting {
+public class Insert {
 
     private int[] array;
+
+    /**
+     * Method for inserting random values into a heap.
+     * @param heap that is values are being inserted.
+     */
+    private void insert(Heap heap) {
+        for (int i : array) {
+            heap.insert(i);
+        }
+    }
 
     /**
      * Method for creating an array filled with random values.
@@ -21,26 +32,10 @@ public class ArraySorting {
     }
 
     /**
-     * Method for sorting an array.
-     * @param heap that is being used as an auxiliary datastructure.
-     * @return sorted int array.
-     */
-    private int[] sort(Heap heap) {
-        int[] sortedArray = new int[array.length];
-        for (int i : array) {
-            heap.insert(i);
-        }
-        for (int i = 0; i < array.length; i++){
-            sortedArray[i] = heap.deleteMin();
-        }
-        return sortedArray;
-    }
-
-    /**
-     * Method for benchmarking a sorting of an array with random values.
+     * Method for benchmarking inserts into a heap.
      * @param arraySize size of the array that is being benchmarked.
      */
-    public void arraySortingBenchmark(int arraySize) {
+    public void insertBenchmark(int arraySize) {
         long binary = 0;
         long unary = 0;
         long binaryD = 0;
@@ -53,84 +48,83 @@ public class ArraySorting {
         long skew = 0;
         long treapTimer = 0;
 
-        BinaryHeap binaryHeap = new BinaryHeap(arraySize);
-        BinomialHeap binomialHeap = new BinomialHeap();
-        FibonacciHeap fibonacciHeap = new FibonacciHeap();
-        LeftistHeap leftistHeap = new LeftistHeap();
-        PairingHeap pairingHeap = new PairingHeap();
-        SkewHeap skewHeap = new SkewHeap();
-        DHeap unaryHeap = new DHeap(arraySize, 1);
-        DHeap binaryHeapD = new DHeap(arraySize, 2);
-        DHeap ternaryHeap = new DHeap(arraySize, 3);
-        DHeap quaternaryHeap = new DHeap(arraySize, 4);
-        Treap treap = new Treap();
-
         for (int i = 0; i < 10; i++) {
             array = createArrayWithRandomValues(arraySize);
+            BinaryHeap binaryHeap = new BinaryHeap(arraySize);
+            BinomialHeap binomialHeap = new BinomialHeap();
+            FibonacciHeap fibonacciHeap = new FibonacciHeap();
+            LeftistHeap leftistHeap = new LeftistHeap();
+            PairingHeap pairingHeap = new PairingHeap();
+            SkewHeap skewHeap = new SkewHeap();
+            DHeap unaryHeap = new DHeap(arraySize, 1);
+            DHeap binaryHeapD = new DHeap(arraySize, 2);
+            DHeap ternaryHeap = new DHeap(arraySize, 3);
+            DHeap quaternaryHeap = new DHeap(arraySize, 4);
+            Treap treap = new Treap();
 
             long startTime = System.nanoTime();
-            sort(binaryHeap);
+            insert(binaryHeap);
             binary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(binomialHeap);
+            insert(binomialHeap);
             binomial += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(fibonacciHeap);
+            insert(fibonacciHeap);
             fibonacci += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(leftistHeap);
+            insert(leftistHeap);
             leftist += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(pairingHeap);
+            insert(pairingHeap);
             pairing += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(skewHeap);
+            insert(skewHeap);
             skew += (System.nanoTime() - startTime);
 
             if (arraySize <= 30000) {
                 startTime = System.nanoTime();
-                sort(unaryHeap);
+                insert(unaryHeap);
                 unary += (System.nanoTime() - startTime);
             }
 
             startTime = System.nanoTime();
-            sort(binaryHeapD);
+            insert(binaryHeapD);
             binaryD += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(ternaryHeap);
+            insert(ternaryHeap);
             ternary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(quaternaryHeap);
+            insert(quaternaryHeap);
             quaternary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            sort(treap);
+            insert(treap);
             treapTimer += (System.nanoTime() - startTime);
 
         }
 
-        binary /= 10*1000000;
-        binomial /= 10*1000000;
-        fibonacci /= 10*1000000;
-        leftist /= 10*1000000;
-        pairing /= 10*1000000;
-        skew /= 10*1000000;
-        unary /= 10*1000000;
-        binaryD /= 10*1000000;
-        ternary /= 10*1000000;
-        quaternary /= 10*1000000;
-        treapTimer /= 10*1000000;
+        binary /= 10 * 1000000;
+        binomial /= 10 * 1000000;
+        fibonacci /= 10 * 1000000;
+        leftist /= 10 * 1000000;
+        pairing /= 10 * 1000000;
+        skew /= 10 * 1000000;
+        unary /= 10 * 1000000;
+        binaryD /= 10 * 1000000;
+        ternary /= 10 * 1000000;
+        quaternary /= 10 * 1000000;
+        treapTimer /= 10 * 1000000;
 
-        System.out.println("Average sorting time when the size \nof the array being sorted was " + arraySize + ":\n");
-        System.out.println("Binary heap: " + binary + " ms.");
-        System.out.println("Binomial heap: " + binomial + " ms.");
+        System.out.println("Average inserting time when the number \nof the integers being inserted was " + arraySize + ":\n");
+        System.out.println("Binary heap: " + binary + " ns.");
+        System.out.println("Binomial heap: " + binomial + " ns.");
         System.out.println("Fibonacci heap: " + fibonacci + " ms.");
         System.out.println("Leftist heap: " + leftist + " ms.");
         System.out.println("Pairing heap: " + pairing + " ms.");
