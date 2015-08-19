@@ -164,4 +164,16 @@ public class DHeap implements Heap {
     private int getNthChildIndex(int index, int n) {
         return d * index + n;
     }
+
+    /**
+     * Method for decreasing the value of a specific index.
+     * @param index index at which the value that is being decreased resides.
+     * @param i new value that is being inserted.
+     */
+    public void decreaseKey(int index, int i) {
+        if (array[index] > i) {
+            array[index] = i;
+            siftUp(index);
+        }
+    }
 }

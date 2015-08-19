@@ -162,4 +162,16 @@ public class BinaryHeap implements Heap {
     private int getParentIndex(int index) {
         return (index - 1) / 2;
     }
+
+    /**
+     * Method for decreasing the value of a specific index.
+     * @param index index at which the value that is being decreased resides.
+     * @param i new value that is being inserted.
+     */
+    public void decreaseKey(int index, int i) {
+        if (array[index] > i) {
+            array[index] = i;
+            siftUp(index);
+        }
+    }
 }

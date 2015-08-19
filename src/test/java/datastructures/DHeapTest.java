@@ -84,4 +84,16 @@ public class DHeapTest {
         heap.deleteMin();
         Assert.assertEquals(3, heap.deleteMin());
     }
+
+    @Test
+    public void decreaseKeyWorks() {
+        heap.insert(3);
+        heap.insert(5);
+        heap.insert(8);
+        heap.insert(2);
+        heap.decreaseKey(3, 15);
+        Assert.assertEquals(2, heap.findMin());
+        heap.decreaseKey(3, 1);
+        Assert.assertEquals(1, heap.deleteMin());
+    }
 }

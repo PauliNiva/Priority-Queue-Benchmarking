@@ -116,17 +116,17 @@ public class ArraySorting {
 
         }
 
-        binary /= 10*1000000;
-        binomial /= 10*1000000;
-        fibonacci /= 10*1000000;
-        leftist /= 10*1000000;
-        pairing /= 10*1000000;
-        skew /= 10*1000000;
-        unary /= 10*1000000;
-        binaryD /= 10*1000000;
-        ternary /= 10*1000000;
-        quaternary /= 10*1000000;
-        treapTimer /= 10*1000000;
+        binary /= 10 * 1000000;
+        binomial /= 10 * 1000000;
+        fibonacci /= 10 * 1000000;
+        leftist /= 10 * 1000000;
+        pairing /= 10 * 1000000;
+        skew /= 10 * 1000000;
+        unary /= 10 * 1000000;
+        binaryD /= 10 * 1000000;
+        ternary /= 10 * 1000000;
+        quaternary /= 10 * 1000000;
+        treapTimer /= 10 * 1000000;
 
         System.out.println("Average sorting time when the size \nof the array being sorted was " + arraySize + ":\n");
         System.out.println("Binary heap: " + binary + " ms.");

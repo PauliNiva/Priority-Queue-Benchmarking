@@ -190,6 +190,27 @@ public class BinomialHeap implements Heap {
         return minRoot;
     }
 
+    /**
+     * Method to decrease the value of a node.
+     * @param oldValue value of the node that is being decreased.
+     * @param newValue the new value that is being inserted.
+     */
+    public void decreaseKey(int oldValue, int newValue) {
+        Node tmp = min.findANodeWithValue(oldValue);
+        if (tmp == null || oldValue <= newValue) {
+            return;
+        }
+        tmp.value = newValue;
+        Node tmpParent = tmp.parent;
+        while ((tmpParent != null) && (tmp.value < tmpParent.value)) {
+            int i = tmp.value;
+            tmp.value = tmpParent.value;
+            tmpParent.value = i;
+            tmp = tmpParent;
+            tmpParent = tmpParent.parent;
+        }
+    }
+
 
     /**
      * Class for binomial min nodes.
@@ -227,6 +248,33 @@ public class BinomialHeap implements Heap {
             }
             sibling = tmp;
             return newHead;
+        }
+
+        /**
+         * Method to find a node with a specific value.
+         * @param i value of the node that is being searched.
+         * @return the node with the speficied value.
+         */
+        public Node findANodeWithValue(int i) {
+            Node node = null;
+            Node tmp = this;
+            while (tmp != null) {
+                if (tmp.value == i) {
+                    node = tmp;
+                    break;
+                }
+                if (tmp.child == null) {
+                    tmp = tmp.sibling;
+                } else {
+                    node = tmp.child.findANodeWithValue(i);
+                    if (node == null) {
+                        tmp = tmp.sibling;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return node;
         }
     }
 }
