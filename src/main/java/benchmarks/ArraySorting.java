@@ -31,7 +31,8 @@ public class ArraySorting {
             heap.insert(i);
         }
         for (int i = 0; i < array.length; i++){
-            sortedArray[i] = heap.deleteMin();
+            sortedArray[i] = heap.findMinimum();
+            heap.deleteMin();
         }
         return sortedArray;
     }

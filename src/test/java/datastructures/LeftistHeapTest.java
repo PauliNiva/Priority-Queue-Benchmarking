@@ -39,7 +39,7 @@ public class LeftistHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin());
+        Assert.assertEquals(2, heap.findMin().getValue());
     }
 
     @Test
@@ -55,9 +55,9 @@ public class LeftistHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
-        Assert.assertEquals(7, heap.deleteMin());
+        Assert.assertEquals(2, heap.deleteMin().getValue());
+        Assert.assertEquals(5, heap.deleteMin().getValue());
+        Assert.assertEquals(7, heap.deleteMin().getValue());
     }
 
     @Test
@@ -82,9 +82,9 @@ public class LeftistHeapTest {
         anotherHeap.insert(543);
         anotherHeap.insert(25);
         heap.merge(anotherHeap);
-        Assert.assertEquals(3, heap.deleteMin());
-        Assert.assertEquals(4, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
+        Assert.assertEquals(3, heap.deleteMin().getValue());
+        Assert.assertEquals(4, heap.deleteMin().getValue());
+        Assert.assertEquals(5, heap.deleteMin().getValue());
     }
 
     @Test
@@ -107,12 +107,12 @@ public class LeftistHeapTest {
         heap.insert(7);
         heap.insert(35);
         heap.merge(heap);
-        Assert.assertEquals(7, heap.deleteMin());
-        Assert.assertEquals(34, heap.deleteMin());
+        Assert.assertEquals(7, heap.deleteMin().getValue());
+        Assert.assertEquals(34, heap.deleteMin().getValue());
     }
 
     @Test
     public void deleteMinOnAnEmptyHeap() {
-        Assert.assertEquals(Integer.MIN_VALUE, heap.deleteMin());
+        Assert.assertEquals(null, heap.deleteMin());
     }
 }

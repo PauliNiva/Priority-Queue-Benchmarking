@@ -24,6 +24,15 @@ public class Treap implements Heap {
     }
 
     /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     */
+    @Override
+    public void insert(Node node) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
      * Inserts value x into the treap.
      * If x is already in treap it does nothing.
      * @param x value of the node that is being inserted.
@@ -34,30 +43,68 @@ public class Treap implements Heap {
     }
 
     /**
-     * Finds the minimum in the treap.
+     * Finds the minimum node in the treap.
+     * @return if the treap is empty returns null, minimum node otherwise.
+     */
+    @Override
+    public Node findMin() {
+        if (isEmpty()) {
+            return null;
+        }
+        Node pointer = root;
+        while (pointer.getLeftChild() != nullNode) {
+            pointer = pointer.getLeftChild();
+        }
+        return pointer;
+    }
+
+    /**
+     * Finds the minimum value in the treap.
      * @return if the treap is empty returns Integer.MAX_VALUE, minimum value as int otherwise.
      */
     @Override
-    public int findMin() {
+    public int findMinimum() {
         if (isEmpty()) {
-            return Integer.MAX_VALUE;
+            return Integer.MIN_VALUE;
         }
         Node pointer = root;
-        while (pointer.leftChild != nullNode) {
-            pointer = pointer.leftChild;
+        while (pointer.getLeftChild() != nullNode) {
+            pointer = pointer.getLeftChild();
         }
-        return pointer.value;
+        return pointer.getValue();
     }
 
     /**
      * Method to delete min node.
-     * @return value of min node as int.
+     * @return min node.
      */
     @Override
-    public int deleteMin() {
-        int min = findMin();
-        remove(findMin());
+    public Node deleteMin() {
+        Node min = findMin();
+        if (min != null) {
+            remove(findMin().getValue());
+        }
         return min;
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(Node node, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param index NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(int index, int newValue) {
+        // NOT IMPLEMENTED
     }
 
     /**
@@ -69,22 +116,22 @@ public class Treap implements Heap {
     }
 
     /**
-     * Auxiliary method that inserts x into a subtreap.
-     * @param x the that is being inserted.
+     * Auxiliary method that inserts integer x into a subtreap.
+     * @param x the integer that is being inserted.
      * @param node root node of the (sub)tree.
      * @return the new root.
      */
     private Node insert(int x, Node node) {
         if (node == nullNode) {
             node = new Node(x, nullNode, nullNode);
-        } else if (x - node.value < 0) {
-            node.leftChild = insert(x, node.leftChild);
-            if (node.leftChild.priority < node.priority) {
+        } else if (x - node.getValue() < 0) {
+            node.setLeftChild(insert(x, node.getLeftChild()));
+            if (node.getLeftChild().getPriority() < node.getPriority()) {
                 node = rotateWithLeftChild(node);
             }
-        } else if (x - node.value > 0) {
-            node.rightChild = insert(x, node.rightChild);
-            if (node.rightChild.priority < node.priority) {
+        } else if (x - node.getValue() > 0) {
+            node.setRightChild(insert(x, node.getRightChild()));
+            if (node.getRightChild().getPriority() < node.getPriority()) {
                 node = rotateWithRightChild(node);
             }
         }
@@ -108,12 +155,12 @@ public class Treap implements Heap {
      */
     private Node remove(int x, Node node) {
         if (node != nullNode) {
-            if (x - node.value < 0) {
-                node.leftChild = remove(x, node.leftChild);
-            } else if (x - node.value > 0) {
-                node.rightChild = remove(x, node.rightChild);
+            if (x - node.getValue() < 0) {
+                node.setLeftChild(remove(x, node.getLeftChild()));
+            } else if (x - node.getValue() > 0) {
+                node.setRightChild(remove(x, node.getRightChild()));
             } else {
-                if (node.leftChild.priority < node.rightChild.priority) {
+                if (node.getLeftChild().getPriority() < node.getRightChild().getPriority()) {
                     node = rotateWithLeftChild(node);
                 } else {
                     node = rotateWithRightChild(node);
@@ -121,7 +168,7 @@ public class Treap implements Heap {
                 if(node != nullNode) {
                     node = remove(x, node);
                 } else {
-                    node.leftChild = nullNode;
+                    node.setLeftChild(nullNode);
                 }
             }
         }
@@ -129,69 +176,22 @@ public class Treap implements Heap {
     }
 
     /**
-     * Rotates node with its leftChild child.
+     * Rotates node with its left child.
      */
     private Node rotateWithLeftChild(Node node1) {
-        Node node2 = node1.leftChild;
-        node1.leftChild = node2.rightChild;
-        node2.rightChild = node1;
+        Node node2 = node1.getLeftChild();
+        node1.setLeftChild(node2.getRightChild());
+        node2.setRightChild(node1);
         return node2;
     }
 
     /**
-     *  Rotates node with its rightChild child.
+     *  Rotates node with its right child.
      */
     private Node rotateWithRightChild(Node node1) {
-        Node node2 = node1.rightChild;
-        node1.rightChild = node2.leftChild;
-        node2.leftChild = node1;
+        Node node2 = node1.getRightChild();
+        node1.setRightChild(node2.getLeftChild());
+        node2.setLeftChild(node1);
         return node2;
-    }
-
-    /**
-     * Class for treap nodes.
-     */
-    static class Node {
-
-        int value;
-        int priority;
-        Node leftChild;
-        Node rightChild;
-
-        /**
-         * Initializes a new node with x as value.
-         * and children as nulls.
-         * @param x value of the new node.
-         */
-        public Node(int x) {
-            value = x;
-            leftChild = null;
-            rightChild = null;
-            priority = new Random().nextInt();
-        }
-
-        /**
-         * Initializes a new node with x as value.
-         * and children named left and right.
-         * @param x value of the new node.
-         */
-        public Node(int x, Node left , Node right) {
-            value  = x;
-            leftChild = left;
-            rightChild = right;
-            priority = new Random().nextInt();
-        }
-
-        /**
-         * Initializes a new null node.
-         * @param x Value of null node.
-         * @param y Priority of null node.
-         */
-        public Node(int x, int y) {
-            value  = x;
-            leftChild = null;
-            rightChild = null;
-            priority = y;
-        }
     }
 }

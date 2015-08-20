@@ -20,6 +20,15 @@ public class PairingHeap implements Heap {
     }
 
     /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     */
+    @Override
+    public void insert(Node node) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
      * Inserts a new node of value x into the heap.
      * @param x value of the node that is being added.
      */
@@ -38,31 +47,60 @@ public class PairingHeap implements Heap {
      * @return value of the root as int.
      */
     @Override
-    public int findMin() {
-        return root.value;
+    public Node findMin() {
+        return root;
     }
 
     /**
-     * Deletes the minimum value.
-     * @return the deleted minimum value as int.
+     * Finds the value of the minimum node.
+     * @return the minimum value of the heap as int.
      */
     @Override
-    public int deleteMin() {
-        if (isEmpty()) {
-            return Integer.MIN_VALUE;
-        }
-        Node min = root;
-        if (root.leftChild == null) {
-            root = null;
-        } else {
-            root = mergePairs(root.leftChild);
-        }
-        return min.value;
+    public int findMinimum() {
+        return root.getValue();
     }
 
     /**
-     * Checks if the min is empty.
-     * @return true if the min is empty, false otherwise.
+     * Deletes the minimum node.
+     * @return the deleted minimum node.
+     */
+    @Override
+    public Node deleteMin() {
+        if (isEmpty()) {
+            return null;
+        }
+        Node min = root;
+        if (root.getLeftChild() == null) {
+            root = null;
+        } else {
+            root = mergePairs(root.getLeftChild());
+        }
+        return min;
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(Node node, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param index NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(int index, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * Checks if the heap is empty.
+     * @return true if the heap is empty, false otherwise.
      */
     public boolean isEmpty() {
         return root == null;
@@ -88,25 +126,25 @@ public class PairingHeap implements Heap {
         if (y == null) {
             return x;
         }
-        if (y.value <= x.value) {
-            y.previousSibling = x.previousSibling;
-            x.previousSibling = y;
-            x.nextSibling = y.leftChild;
-            if (x.nextSibling != null) {
-                x.nextSibling.previousSibling = x;
+        if (y.getValue() <= x.getValue()) {
+            y.setPreviousSibling(x.getPreviousSibling());
+            x.setPreviousSibling(y);
+            x.setNextSibling(y.getLeftChild());
+            if (x.getNextSibling() != null) {
+                x.getNextSibling().setPreviousSibling(x);
             }
-            y.leftChild = x;
+            y.setLeftChild(x);
             return y;
         } else {
-            y.previousSibling = x;
-            x.nextSibling = y.nextSibling;
-            if (x.nextSibling != null) {
-                x.nextSibling.previousSibling = x;
+            y.setPreviousSibling(x);
+            x.setNextSibling(y.getNextSibling());
+            if (x.getNextSibling() != null) {
+                x.getNextSibling().setPreviousSibling(x);
             }
-            y.nextSibling = x.leftChild;
-            if (y.nextSibling != null)
-                y.nextSibling.previousSibling = y;
-            x.leftChild = y;
+            y.setNextSibling(x.getLeftChild());
+            if (y.getNextSibling() != null)
+                y.getNextSibling().setPreviousSibling(y);
+            x.setLeftChild(y);
             return x;
         }
     }
@@ -120,15 +158,15 @@ public class PairingHeap implements Heap {
         if (x == null) {
             return null;
         }
-        if (x.nextSibling == null) {
+        if (x.getNextSibling() == null) {
             return x;
         }
         int numSiblings;
         for (numSiblings = 0; x != null; numSiblings++) {
             array = growArrayIfNeeded(array, numSiblings);
             array[numSiblings] = x;
-            x.previousSibling.nextSibling = null;
-            x = x.nextSibling;
+            x.getPreviousSibling().setNextSibling(null);
+            x = x.getNextSibling();
         }
         array = growArrayIfNeeded(array, numSiblings);
         array[numSiblings] = null;
@@ -160,28 +198,6 @@ public class PairingHeap implements Heap {
             return arrayCopy;
         } else {
             return array;
-        }
-    }
-
-    /**
-     * Class for pairing head nodes.
-     */
-    static class Node {
-        int value;
-        Node parent;
-        Node leftChild;
-        Node nextSibling;
-        Node previousSibling;
-
-        /**
-         * Initializes a new head with value x.
-         * @param x value that the head is initialized with.
-         */
-        public Node(int x) {
-            value = x;
-            parent = null;
-            leftChild = null;
-            previousSibling = null;
         }
     }
 }

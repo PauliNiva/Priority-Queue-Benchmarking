@@ -28,24 +28,24 @@ public class BinaryHeapTest {
 
     @Test
     public void findMinWorks() {
-        Assert.assertEquals(Integer.MIN_VALUE, heap.findMin());
+        Assert.assertEquals(null, heap.findMin());
         heap.insert(1);
-        Assert.assertEquals(1, heap.findMin());
+        Assert.assertEquals(1, heap.findMin().getValue());
     }
 
     @Test
     public void insertAndHeapUpWorks() {
         BinaryHeap heap = new BinaryHeap(8);
         heap.insert(4);
-        Assert.assertEquals(4, heap.findMin());
+        Assert.assertEquals(4, heap.findMin().getValue());
         heap.insert(5);
         heap.insert(2);
         heap.insert(6);
-        Assert.assertEquals(2, heap.findMin());
+        Assert.assertEquals(2, heap.findMin().getValue());
         heap.insert(3);
         heap.insert(7);
         heap.deleteMin();
-        Assert.assertEquals(3, heap.findMin());
+        Assert.assertEquals(3, heap.findMin().getValue());
     }
 
     @Test
@@ -56,19 +56,19 @@ public class BinaryHeapTest {
         heap.insert(7);
         heap.insert(2);
         heap.insert(6);
-        Assert.assertEquals(2, heap.deleteMin());
+        Assert.assertEquals(2, heap.deleteMin().getValue());
     }
 
     @Test
     public void removingMinWhenQueueIsEmpty() {
-        Assert.assertEquals(Integer.MIN_VALUE, heap.deleteMin());
+        Assert.assertEquals(null, heap.deleteMin());
     }
 
     @Test
     public void removingMinAfterWhichQueueIsEmpty() {
         heap.insert(3);
-        Assert.assertEquals(3, heap.deleteMin());
-        Assert.assertEquals(Integer.MIN_VALUE, heap.deleteMin());
+        Assert.assertEquals(3, heap.deleteMin().getValue());
+        Assert.assertEquals(null, heap.deleteMin());
     }
 
     @Test
@@ -76,9 +76,9 @@ public class BinaryHeapTest {
         heap.insert(3);
         heap.insert(3);
         heap.insert(3);
-        Assert.assertEquals(3, heap.deleteMin());
+        Assert.assertEquals(3, heap.deleteMin().getValue());
         heap.deleteMin();
-        Assert.assertEquals(3, heap.deleteMin());
+        Assert.assertEquals(3, heap.deleteMin().getValue());
     }
 
     @Test
@@ -88,8 +88,8 @@ public class BinaryHeapTest {
         heap.insert(8);
         heap.insert(2);
         heap.decreaseKey(3, 15);
-        Assert.assertEquals(2, heap.findMin());
+        Assert.assertEquals(2, heap.findMin().getValue());
         heap.decreaseKey(3, 1);
-        Assert.assertEquals(1, heap.deleteMin());
+        Assert.assertEquals(1, heap.deleteMin().getValue());
     }
 }

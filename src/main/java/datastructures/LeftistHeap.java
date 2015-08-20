@@ -19,6 +19,16 @@ public class LeftistHeap implements Heap {
     }
 
     /**
+     * Inserts a node into the heap by merging it
+     * with existing tree.
+     * @param node node that is being added.
+     */
+    @Override
+    public void insert(Node node) {
+        root = merge(node, root);
+    }
+
+    /**
      * Inserts a new node of value x into the heap
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
@@ -29,28 +39,57 @@ public class LeftistHeap implements Heap {
     }
 
     /**
-     * Finds the minimum value, but does not remove it.
-     * @return the minimum value as int.
+     * Finds the minimum node, but does not remove it.
+     * @return the minimum node.
      */
     @Override
-    public int findMin() {
-        return root.value;
+    public Node findMin() {
+        return root;
     }
 
     /**
-     * Deletes the minimum value.
-     * Then the method merges the subtrees.
-     * @return the deleted minimum value as int.
+     * Finds the value of minimum node.
+     * @return the value of minimum node as int.
      */
     @Override
-    public int deleteMin( ) {
+    public int findMinimum() {
+        return root.getValue();
+    }
+
+    /**
+     * Deletes the minimum node.
+     * Then the method merges the subtrees.
+     * @return the deleted minimum node.
+     */
+    @Override
+    public Node deleteMin( ) {
         if (isEmpty()) {
-            return Integer.MIN_VALUE;
+            return null;
         } else {
-            int min = root.value;
-            root = merge(root.leftChild, root.rightChild);
+            Node min = root;
+            root = merge(root.getLeftChild(), root.getRightChild());
             return min;
         }
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(datastructures.Node node, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param index NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(int index, int newValue) {
+        // NOT IMPLEMENTED
     }
 
     /**
@@ -94,56 +133,23 @@ public class LeftistHeap implements Heap {
         if (y == null) {
             return x;
         }
-        if (x.value > y.value) {
+        if (x.getValue() > y.getValue()) {
             Node tmp = x;
             x = y;
             y = tmp;
         }
-        x.rightChild = merge(x.rightChild, y);
-        if (x.leftChild == null) {
-            x.leftChild = x.rightChild;
-            x.rightChild = null;
+        x.setRightChild(merge(x.getRightChild(), y));
+        if (x.getLeftChild() == null) {
+            x.setLeftChild(x.getRightChild());
+            x.setRightChild(null);
         } else {
-            if (x.leftChild.sValue < x.rightChild.sValue) {
-                Node tmp = x.leftChild;
-                x.leftChild = x.rightChild;
-                x.rightChild = tmp;
+            if (x.getLeftChild().getSValue() < x.getRightChild().getSValue()) {
+                Node tmp = x.getLeftChild();
+                x.setLeftChild(x.getRightChild());
+                x.setRightChild(tmp);
             }
-            x.sValue = x.rightChild.sValue + 1;
+            x.setSValue(x.getRightChild().getSValue() + 1);
         }
         return x;
-    }
-
-    /**
-     * Class for leftist heap nodes.
-     */
-    class Node {
-
-        private int value;
-        private int sValue;
-        private Node leftChild;
-        private Node rightChild;
-
-        /**
-         * Constructs the node only with value.
-         * @param value numerical value being set as int.
-         */
-        public Node(int value) {
-            this(value, null, null);
-        }
-
-        /**
-         * Constructs the node with value, references to both childs and
-         * initial s-value of 0.
-         * @param value numerical value being set as int.
-         * @param leftChild reference to nodes leftChild child.
-         * @param rightChild reference to nodes rightChild child.
-         */
-        public Node(int value, Node leftChild, Node rightChild) {
-            this.value = value;
-            this.leftChild = leftChild;
-            this.rightChild = rightChild;
-            this.sValue = 0;
-        }
     }
 }

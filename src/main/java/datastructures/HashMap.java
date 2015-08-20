@@ -13,7 +13,7 @@ public class HashMap<K, V> {
     int capacity;
 
     public HashMap(int size) {
-        capacity = size;
+       capacity = size;
         array = new Entry[capacity];
     }
 

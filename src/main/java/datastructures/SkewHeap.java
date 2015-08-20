@@ -19,6 +19,15 @@ public class SkewHeap implements Heap {
     }
 
     /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     */
+    @Override
+    public void insert(Node node) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
      * Inserts a new node of value x into the heap
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
@@ -29,28 +38,57 @@ public class SkewHeap implements Heap {
     }
 
     /**
+     * Finds the minimum node, but does not remove it.
+     * @return the minimum node.
+     */
+    @Override
+    public Node findMin() {
+        return root;
+    }
+
+    /**
      * Finds the minimum value, but does not remove it.
      * @return the minimum value as int.
      */
     @Override
-    public int findMin() {
-        return root.value;
+    public int findMinimum() {
+        return root.getValue();
     }
 
     /**
-     * Deletes the minimum value.
+     * Deletes the minimum node.
      * Then the method merges the subtrees.
-     * @return the deleted minimum value as int.
+     * @return the deleted minimum node.
      */
     @Override
-    public int deleteMin() {
+    public Node deleteMin() {
         if (isEmpty()) {
-            return Integer.MIN_VALUE;
+            return null;
         } else {
-            int min = root.value;
-            root = merge(root.leftChild, root.rightChild);
+            Node min = root;
+            root = merge(root.getLeftChild(), root.getRightChild());
             return min;
         }
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(Node node, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param index NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(int index, int newValue) {
+        // NOT IMPLEMENTED
     }
 
     /**
@@ -94,46 +132,16 @@ public class SkewHeap implements Heap {
         if (y == null) {
             return x;
         }
-        if (x.value < y.value) {
-            Node tmp = x.leftChild;
-            x.leftChild = merge(x.rightChild, y);
-            x.rightChild = tmp;
+        if (x.getValue() < y.getValue()) {
+            Node tmp = x.getLeftChild();
+            x.setLeftChild(merge(x.getRightChild(), y));
+            x.setRightChild(tmp);
             return x;
         } else {
-            Node tmp = y.rightChild;
-            y.rightChild = merge(y.leftChild, x);
-            y.leftChild = tmp;
+            Node tmp = y.getRightChild();
+            y.setRightChild(merge(y.getLeftChild(), x));
+            y.setLeftChild(tmp);
             return y;
-        }
-    }
-
-    /**
-     * Class for skew heap nodes.
-     */
-    class Node {
-
-        private int value;
-        private Node leftChild;
-        private Node rightChild;
-
-        /**
-         * Constructs the node only with value.
-         * @param value numerical value being set as int.
-         */
-        public Node(int value) {
-            this(value, null, null);
-        }
-
-        /**
-         * Constructs the node with value, references to both childs.
-         * @param value numerical value being set as int.
-         * @param leftChild reference to nodes leftChild child.
-         * @param rightChild reference to nodes rightChild child.
-         */
-        public Node(int value, Node leftChild, Node rightChild) {
-            this.value = value;
-            this.leftChild = leftChild;
-            this.rightChild = rightChild;
         }
     }
 }

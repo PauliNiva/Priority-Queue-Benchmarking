@@ -5,7 +5,7 @@ package datastructures;
  */
 public class DHeap implements Heap {
 
-    private int[] array;
+    private Node[] array;
     private int heapSize;
     private int capacity;
     private int d;
@@ -18,49 +18,70 @@ public class DHeap implements Heap {
      */
     public DHeap(int arraySize, int numberOfChildren) {
         capacity = arraySize;
-        array =  new int[capacity];
+        array =  new Node[capacity];
         heapSize = 0;
         d = numberOfChildren;
     }
 
+    @Override
+    public void insert(Node node) {
+        // NOT IMPLEMENTED
+    }
+
     /**
      * Inserts value to the heap.
-     * It does this by putting the value in after the arrays last value.
-     * Then it heaps it up until the heap property is restored.
+     * It does this by creating a new node with value and putting
+     * it in after the arrays last node. Then it heaps it up until
+     * the heap property is restored.
      * @param x int that is being inserted.
      */
     @Override
     public void insert(int x) {
-        array[heapSize] = x;
+        Node node = new Node(x);
+        array[heapSize] = node;
         siftUp(heapSize);
         heapSize++;
     }
 
     /**
-     * Finds the minimum value in the array.
-     * @return if the array is not empty, it returns the value of minimum value
+     * Finds the minimum node in the array.
+     * @return if the array is not empty, it returns the minimum node
      * which is at the root. If the array is empty, it returns null.
      */
     @Override
-    public int findMin() {
+    public Node findMin() {
         if (isEmpty()) {
-            return Integer.MIN_VALUE;
+            return null;
         } else {
             return array[ROOT];
         }
     }
 
     /**
-     * Removes the minimum value.
-     * It does this by extracting the root, then moving the last value in to the roots
-     * place and then heaping it down until the heap property is restored.
-     * @return the minimum value value as int.
+     * Finds the value of the minimum node
+     * @return if the heap is not empty, it return the value of the root,
+     * otherwise it returns the Integer min value.
      */
     @Override
-    public int deleteMin() {
-        int removed;
+    public int findMinimum() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;
+        } else {
+            return array[ROOT].getValue();
+        }
+    }
+
+    /**
+     * Removes the minimum node.
+     * It does this by extracting the root, then moving the last node into the roots
+     * place and then heaping it down until the heap property is restored.
+     * @return the minimum node.
+     */
+    @Override
+    public Node deleteMin() {
+        Node removed;
+        if (isEmpty()) {
+            return null;
         } else {
             removed = array[ROOT];
             array[ROOT] = array[heapSize - 1];
@@ -73,6 +94,28 @@ public class DHeap implements Heap {
     }
 
     /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(Node node, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * Method for decreasing the value of a specific index.
+     * @param index index at which the value that is being decreased resides.
+     * @param newValue new value that is being inserted.
+     */
+    public void decreaseKey(int index, int newValue) {
+        if (array[index].getValue() > newValue) {
+            array[index].setValue(newValue);
+            siftUp(index);
+        }
+    }
+
+    /**
      * Checks if the array is empty.
      * @return true if the array is empty, false otherwise.
      */
@@ -81,16 +124,16 @@ public class DHeap implements Heap {
     }
 
     /**
-     * Method that moves the value recursively up the tree until the
+     * Method that moves the node recursively up the tree until the
      * heap property is restored.
-     * @param index place where the value that is being moved is at.
+     * @param index place where the node that is being moved is at.
      */
     public void siftUp(int index) {
         int parentIndex;
-        int tmp;
+        Node tmp;
         if (index != 0) {
             parentIndex = getParentIndex(index);
-            if (array[parentIndex] > array[index]) {
+            if (array[parentIndex].getValue() > array[index].getValue()) {
                 tmp = array[parentIndex];
                 array[parentIndex] = array[index];
                 array[index] = tmp;
@@ -100,16 +143,16 @@ public class DHeap implements Heap {
     }
 
     /**
-     * Method that moves the value down in the tree until the
+     * Method that moves the node down in the tree until the
      * heap property is restored.
-     * @param index place where the value that is being moved is at.
+     * @param index place where the node that is being moved is at.
      */
     public void siftDown(int index) {
         int child;
-        int tmp = array[index];
+        Node tmp = array[index];
         while (getNthChildIndex(index, 1) < heapSize) {
             child = getMinChild(index);
-            if (array[child] < tmp) {
+            if (array[child].getValue() < tmp.getValue()) {
                 array[index] = array[child];
             } else {
                 break;
@@ -128,7 +171,7 @@ public class DHeap implements Heap {
     }
 
     /**
-     * Method to get the index of the child node with a min value.
+     * Method to get the index of the child node with a min value amongst the children.
      * @param index index of the node whose child with min value is being get.
      * @return index of the child node with min value as int.
      */
@@ -137,7 +180,7 @@ public class DHeap implements Heap {
         int n = 2;
         int position = getNthChildIndex(index, n);
         while ((n <= d) && (position < heapSize)) {
-            if (array[position] < array[bestCandidate]) {
+            if (array[position].getValue() < array[bestCandidate].getValue()) {
                 bestCandidate = position;
             }
             n++;
@@ -163,17 +206,5 @@ public class DHeap implements Heap {
      */
     private int getNthChildIndex(int index, int n) {
         return d * index + n;
-    }
-
-    /**
-     * Method for decreasing the value of a specific index.
-     * @param index index at which the value that is being decreased resides.
-     * @param i new value that is being inserted.
-     */
-    public void decreaseKey(int index, int i) {
-        if (array[index] > i) {
-            array[index] = i;
-            siftUp(index);
-        }
     }
 }

@@ -3,7 +3,11 @@ package datastructures;
 
 public interface Heap {
 
-    void insert(int key);
-    int findMin();
-    int deleteMin();
+    void insert(Node node);
+    void insert(int value);
+    Node findMin();
+    int findMinimum();
+    Node deleteMin();
+    void decreaseKey(Node node, int newValue);
+    void decreaseKey(int index, int newValue);
 }

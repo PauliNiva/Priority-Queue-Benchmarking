@@ -18,6 +18,15 @@ public class BinomialHeap implements Heap {
     }
 
     /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     */
+    @Override
+    public void insert(Node node) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
      * Inserts a new node of value x into the min
      * by merging it with the existing tree.
      * @param x value of the node that is being added.
@@ -33,40 +42,53 @@ public class BinomialHeap implements Heap {
     }
 
     /**
-     * Finds the minimum of the binomial min.
-     * @return value of the minimum min as int.
+     * Finds the minimum node in the heap.
+     * @return minimum node.
      */
     @Override
-    public int findMin() {
-        return findMinRoot().value;
+    public Node findMin() {
+        return findMinRoot();
+    }
+
+    /**
+     * Finds tha value of minimum node.
+     * @return value of min node as int.
+     */
+    @Override
+    public int findMinimum() {
+        if (findMinRoot() != null) {
+            return findMinRoot().getValue();
+        } else {
+            return Integer.MIN_VALUE;
+        }
     }
 
     /**
      * Method to delete the node with a minimum value.
-     * @return value of the minimum node as int.
+     * @return the minimum node.
      */
     @Override
-    public int deleteMin() {
+    public Node deleteMin() {
         if (isEmpty()) {
-            return Integer.MIN_VALUE;
+            return null;
         } else {
             Node minRoot = findMinRoot();
             Node tmp = min;
             Node tmpPrev = null;
-            while (minRoot.value != tmp.value) {
+            while (minRoot.getValue() != tmp.getValue()) {
                 tmpPrev = tmp;
-                tmp = tmp.sibling;
+                tmp = tmp.getSibling();
             }
             if (tmpPrev == null) {
-                min = tmp.sibling;
+                min = tmp.getSibling();
             } else {
-                tmpPrev.sibling = tmp.sibling;
+                tmpPrev.setSibling(tmp.getSibling());
             }
-            tmp = tmp.child;
+            tmp = tmp.getChild();
             Node tmpOriginal = tmp;
             while (tmp != null) {
-                tmp.parent = null;
-                tmp = tmp.sibling;
+                tmp.setParent(null);
+                tmp = tmp.getSibling();
             }
             if ((min == null) && (tmpOriginal == null)) {
             } else {
@@ -79,7 +101,38 @@ public class BinomialHeap implements Heap {
                     }
                 }
             }
-            return minRoot.value;
+            return minRoot;
+        }
+    }
+
+    /**
+     * NOT IMPLEMENTED
+     * @param node NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
+     */
+    @Override
+    public void decreaseKey(Node node, int newValue) {
+        // NOT IMPLEMENTED
+    }
+
+    /**
+     * Method to decrease the value of a node.
+     * @param oldValue value of the node that is being decreased.
+     * @param newValue the new value that is being inserted.
+     */
+    public void decreaseKey(int oldValue, int newValue) {
+        Node tmp = min.findANodeWithValue(oldValue);
+        if (tmp == null || oldValue <= newValue) {
+            return;
+        }
+        tmp.setValue(newValue);
+        Node tmpParent = tmp.getParent();
+        while ((tmpParent != null) && (tmp.getValue() < tmpParent.getValue())) {
+            int i = tmp.getValue();
+            tmp.setValue(tmpParent.getValue());
+            tmpParent.setValue(i);
+            tmp = tmpParent;
+            tmpParent = tmpParent.getParent();
         }
     }
 
@@ -106,28 +159,28 @@ public class BinomialHeap implements Heap {
         Node tmp1 = min;
         Node tmp2 = heap;
         while ((tmp1 != null) && (tmp2 != null)) {
-            if (tmp1.degree == tmp2.degree) {
+            if (tmp1.getDegree() == tmp2.getDegree()) {
                 Node tmp = tmp2;
-                tmp2 = tmp2.sibling;
-                tmp.sibling = tmp1.sibling;
-                tmp1.sibling = tmp;
-                tmp1 = tmp.sibling;
+                tmp2 = tmp2.getSibling();
+                tmp.setSibling(tmp1.getSibling());
+                tmp1.setSibling(tmp);
+                tmp1 = tmp.getSibling();
             } else {
-                if (tmp1.degree < tmp2.degree) {
-                    if ((tmp1.sibling == null) || (tmp1.sibling.degree > tmp2.degree)) {
+                if (tmp1.getDegree() < tmp2.getDegree()) {
+                    if ((tmp1.getSibling() == null) || (tmp1.getSibling().getDegree() > tmp2.getDegree())) {
                         Node tmp = tmp2;
-                        tmp2 = tmp2.sibling;
-                        tmp.sibling = tmp1.sibling;
-                        tmp1.sibling = tmp;
-                        tmp1 = tmp.sibling;
+                        tmp2 = tmp2.getSibling();
+                        tmp.setSibling(tmp1.getSibling());
+                        tmp1.setSibling(tmp);
+                        tmp1 = tmp.getSibling();
                     } else {
-                        tmp1 = tmp1.sibling;
+                        tmp1 = tmp1.getSibling();
                     }
                 } else {
                     Node tmp = tmp1;
                     tmp1 = tmp2;
-                    tmp2 = tmp2.sibling;
-                    tmp1.sibling = tmp;
+                    tmp2 = tmp2.getSibling();
+                    tmp1.setSibling(tmp);
                     if (tmp == min) {
                         min = tmp1;
                     }
@@ -136,39 +189,40 @@ public class BinomialHeap implements Heap {
         }
         if (tmp1 == null) {
             tmp1 = min;
-            while (tmp1.sibling != null) {
-                tmp1 = tmp1.sibling;
+            while (tmp1.getSibling() != null) {
+                tmp1 = tmp1.getSibling();
             }
-            tmp1.sibling = tmp2;
+            tmp1.setSibling(tmp2);
         }
         Node tmp = min;
-        Node tmpNext = min.sibling;
+        Node tmpNext = min.getSibling();
         Node tmpPrev = null;
         while (tmpNext != null) {
-            if ((tmp.degree != tmpNext.degree) || ((tmpNext.sibling != null) && (tmpNext.sibling.degree == tmp.degree))) {
+            if ((tmp.getDegree() != tmpNext.getDegree()) || ((tmpNext.getSibling() != null)
+                    && (tmpNext.getSibling().getDegree() == tmp.getDegree()))) {
                 tmpPrev = tmp;
                 tmp = tmpNext;
             } else {
-                if (tmp.value <= tmpNext.value) {
-                    tmp.sibling = tmpNext.sibling;
-                    tmpNext.parent = tmp;
-                    tmpNext.sibling = tmp.child;
-                    tmp.child = tmpNext;
-                    tmp.degree++;
+                if (tmp.getValue() <= tmpNext.getValue()) {
+                    tmp.setSibling(tmpNext.getSibling());
+                    tmpNext.setParent(tmp);
+                    tmpNext.setSibling(tmp.getChild());
+                    tmp.setChild(tmpNext);
+                    tmp.setDegree(tmp.getDegree() + 1);
                 } else {
                     if (tmpPrev == null) {
                         min = tmpNext;
                     } else {
-                        tmpPrev.sibling = tmpNext;
+                        tmpPrev.setSibling(tmpNext);
                     }
-                    tmp.parent = tmpNext;
-                    tmp.sibling = tmpNext.child;
-                    tmpNext.child = tmp;
-                    tmpNext.degree++;
+                    tmp.setParent(tmpNext);
+                    tmp.setSibling(tmpNext.getChild());
+                    tmpNext.setChild(tmp);
+                    tmpNext.setDegree(tmpNext.getDegree() + 1);
                     tmp = tmpNext;
                 }
             }
-            tmpNext = tmp.sibling;
+            tmpNext = tmp.getSibling();
         }
     }
 
@@ -179,102 +233,19 @@ public class BinomialHeap implements Heap {
     public Node findMinRoot() {
         Node x = min;
         Node minRoot = min;
-        int min = x.value;
+        int minValue;
+        if (min != null) {
+            minValue = x.getValue();
+        } else {
+            minValue = Integer.MIN_VALUE;
+        }
         while (x != null) {
-            if (x.value < min) {
+            if (x.getValue() < minValue) {
                 minRoot = x;
-                min = minRoot.value;
+                minValue = minRoot.getValue();
             }
-            x = x.sibling;
+            x = x.getSibling();
         }
         return minRoot;
-    }
-
-    /**
-     * Method to decrease the value of a node.
-     * @param oldValue value of the node that is being decreased.
-     * @param newValue the new value that is being inserted.
-     */
-    public void decreaseKey(int oldValue, int newValue) {
-        Node tmp = min.findANodeWithValue(oldValue);
-        if (tmp == null || oldValue <= newValue) {
-            return;
-        }
-        tmp.value = newValue;
-        Node tmpParent = tmp.parent;
-        while ((tmpParent != null) && (tmp.value < tmpParent.value)) {
-            int i = tmp.value;
-            tmp.value = tmpParent.value;
-            tmpParent.value = i;
-            tmp = tmpParent;
-            tmpParent = tmpParent.parent;
-        }
-    }
-
-
-    /**
-     * Class for binomial min nodes.
-     */
-    class Node {
-        int value;
-        int degree;
-        Node parent;
-        Node child;
-        Node sibling;
-
-        /**
-         * Initializes a new min with value x.
-         * @param x value that the min is initialized with.
-         */
-        public Node(int x) {
-            value = x;
-            degree = 0;
-            parent = null;
-            child = null;
-        }
-
-        /**
-         * This is an auxiliary method for deleteMin method.
-         * It reverses the root list.
-         * @param tmp the min node of the root list to be reversed.
-         * @return the min of the reversed root list.
-         */
-        private Node reverseRootList(Node tmp) {
-            Node newHead;
-            if (sibling != null) {
-                newHead = sibling.reverseRootList(this);
-            } else {
-                newHead = this;
-            }
-            sibling = tmp;
-            return newHead;
-        }
-
-        /**
-         * Method to find a node with a specific value.
-         * @param i value of the node that is being searched.
-         * @return the node with the speficied value.
-         */
-        public Node findANodeWithValue(int i) {
-            Node node = null;
-            Node tmp = this;
-            while (tmp != null) {
-                if (tmp.value == i) {
-                    node = tmp;
-                    break;
-                }
-                if (tmp.child == null) {
-                    tmp = tmp.sibling;
-                } else {
-                    node = tmp.child.findANodeWithValue(i);
-                    if (node == null) {
-                        tmp = tmp.sibling;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            return node;
-        }
     }
 }

@@ -39,7 +39,7 @@ public class PairingHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin());
+        Assert.assertEquals(2, heap.findMin().getValue());
     }
 
     @Test
@@ -55,9 +55,9 @@ public class PairingHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
-        Assert.assertEquals(7, heap.deleteMin());
+        Assert.assertEquals(2, heap.deleteMin().getValue());
+        Assert.assertEquals(5, heap.deleteMin().getValue());
+        Assert.assertEquals(7, heap.deleteMin().getValue());
     }
 
     @Test
@@ -75,24 +75,24 @@ public class PairingHeapTest {
 
     @Test
     public void deleteMinOnAnEmptyHeap() {
-        Assert.assertEquals(Integer.MIN_VALUE, heap.deleteMin());
+        Assert.assertEquals(null, heap.deleteMin());
     }
 
     @Test
     public void heapIsEmptyAfterInsertAndDelete() {
         Assert.assertTrue(heap.isEmpty());
         heap.insert(3);
-        Assert.assertEquals(3, heap.findMin());
+        Assert.assertEquals(3, heap.findMin().getValue());
         Assert.assertFalse(heap.isEmpty());
-        Assert.assertEquals(3, heap.deleteMin());
+        Assert.assertEquals(3, heap.deleteMin().getValue());
         Assert.assertTrue(heap.isEmpty());
     }
 
     @Test
     public void mergeNullBranches() {
         // TODO asserts.
-        PairingHeap.Node x =  new PairingHeap.Node(1);
-        PairingHeap.Node y =  new PairingHeap.Node(2);
+        Node x =  new Node(1);
+        Node y =  new Node(2);
         heap.merge(x, null);
         heap.merge(null, y);
         heap.merge(null, null);

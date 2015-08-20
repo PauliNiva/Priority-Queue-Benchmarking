@@ -19,66 +19,95 @@ public class FibonacciHeap implements Heap {
     }
 
     /**
-     * Inserts a new node of value x into the heap.
-     * @param x value of the node that is being added.
+     * Inserts a new node into the heap.
+     * @param node node that is being inserted.
      */
     @Override
-    public void insert(int x) {
-        Node node = new Node(x);
+    public void insert(Node node) {
         if (isEmpty()) {
             min = node;
         } else {
-            node.right = min;
-            node.left = min.left;
-            min.left = node;
-            node.left.right = node;
-            if (x < min.value) {
+            int value = node.getValue();
+            node.setRight(min);
+            node.setLeft(min.getLeft());
+            min.setLeft(node);
+            node.getLeft().setRight(node);
+            if (value < min.getValue()) {
                 min = node;
             }
         }
     }
 
     /**
-     * Finds the minimum of the Fibonacci heap.
-     * @return value of the minimum head as int.
+     * Inserts a new node with value into the heap.
+     * @param value value of the node that is being added.
      */
     @Override
-    public int findMin() {
-        return min.value;
+    public void insert(int value) {
+        Node node = new Node(value);
+        if (isEmpty()) {
+            min = node;
+        } else {
+            node.setRight(min);
+            node.setLeft(min.getLeft());
+            min.setLeft(node);
+            node.getLeft().setRight(node);
+            if (value < min.getValue()) {
+                min = node;
+            }
+        }
     }
 
     /**
-     * Deletes the minimum value.
-     * Then the method consolidates the trees if necessary.
-     * @return the deleted minimum value as int.
+     * Finds the minimum node of the Fibonacci heap.
+     * @return minimum node.
      */
     @Override
-    public int deleteMin() {
+    public Node findMin() {
+        return min;
+    }
+
+    /**
+     * Finds the value of the minimum node.
+     * @return value of the minimum node as int.
+     */
+    @Override
+    public int findMinimum() {
+        return min.getValue();
+    }
+
+    /**
+     * Deletes the minimum node.
+     * Then the method consolidates the trees if necessary.
+     * @return the deleted minimum node.
+     */
+    @Override
+    public Node deleteMin() {
         Node tmp = min;
         if (isEmpty()) {
-            return Integer.MIN_VALUE;
+            return null;
         } else {
-            if (tmp.child != null) {
-                tmp.child.parent = null;
-                for (Node node = tmp.child.right; node != tmp.child; node = node.right) {
-                    node.parent = null;
+            if (tmp.getChild() != null) {
+                tmp.getChild().setParent(null);
+                for (Node node = tmp.getChild().getRight(); node != tmp.getChild(); node = node.getRight()) {
+                    node.setParent(null);
                 }
-                Node minLeft = min.left;
-                Node tmpChildLeft = tmp.child.left;
-                min.left = tmpChildLeft;
-                tmpChildLeft.right = min;
-                tmp.child.left = minLeft;
-                minLeft.right = tmp.child;
+                Node minLeft = min.getLeft();
+                Node tmpChildLeft = tmp.getChild().getLeft();
+                min.setLeft(tmpChildLeft);
+                tmpChildLeft.setRight(min);
+                tmp.getChild().setLeft(minLeft);
+                minLeft.setRight(tmp.getChild());
             }
-            tmp.left.right = tmp.right;
-            tmp.right.left = tmp.left;
-            if (tmp == tmp.right) {
+            tmp.getLeft().setRight(tmp.getRight());
+            tmp.getRight().setLeft(tmp.getLeft());
+            if (tmp == tmp.getRight()) {
                 min = null;
             } else {
-                min = tmp.right;
+                min = tmp.getRight();
                 consolidateTrees();
             }
-            return tmp.value;
+            return tmp;
         }
     }
 
@@ -109,11 +138,11 @@ public class FibonacciHeap implements Heap {
             mergedHeap.min = heap1.min;
             if (mergedHeap.min != null) {
                 if (heap2.min != null) {
-                    mergedHeap.min.right.left = heap2.min.left;
-                    heap2.min.left.right = mergedHeap.min.right;
-                    mergedHeap.min.right = heap2.min;
-                    heap2.min.left = mergedHeap.min;
-                    if (heap2.min.value < heap1.min.value) {
+                    mergedHeap.min.getRight().setLeft(heap2.min.getLeft());
+                    heap2.min.getLeft().setRight(mergedHeap.min.getRight());
+                    mergedHeap.min.setRight(heap2.min);
+                    heap2.min.setLeft(mergedHeap.min);
+                    if (heap2.min.getValue() < heap1.min.getValue()) {
                         mergedHeap.min = heap2.min;
                     }
                 }
@@ -133,20 +162,20 @@ public class FibonacciHeap implements Heap {
         Node tmp = min;
         do {
             Node tmp1 = tmp;
-            Node tmpNext = tmp.right;
-            int degree = tmp1.degree;
+            Node tmpNext = tmp.getRight();
+            int degree = tmp1.getDegree();
             while (degreeArray[degree] != null) {
                 Node tmp2 = degreeArray[degree];
-                if (tmp1.value > tmp2.value) {
+                if (tmp1.getValue() > tmp2.getValue()) {
                     Node tmp3 = tmp2;
                     tmp2 = tmp1;
                     tmp1 = tmp3;
                 }
                 if (tmp2 == start) {
-                    start = start.right;
+                    start = start.getRight();
                 }
                 if (tmp2 == tmpNext) {
-                    tmpNext = tmpNext.right;
+                    tmpNext = tmpNext.getRight();
                 }
                 tmp2.link(tmp1);
                 degreeArray[degree] = null;
@@ -157,56 +186,77 @@ public class FibonacciHeap implements Heap {
         } while (tmp != start);
         min = start;
         for (Node node : degreeArray) {
-            if (node != null && node.value < min.value) {
+            if (node != null && node.getValue() < min.getValue()) {
                 min = node;
             }
         }
     }
 
+    /**
+     * Method to decrease the value of a node.
+     * @param node whose value is being decreased.
+     * @param newValue the new value being inserted to a node.
+     */
+    public void decreaseKey(Node node, int newValue) {
+        node.setValue(newValue);
+        Node parent = node.getParent();
+        if ((parent != null) && (node.getValue() < parent.getValue())) {
+            cut(node, parent);
+            cascadeCut(parent);
+        }
+        if (node.getValue() < min.getValue()) {
+            min = node;
+        }
+    }
 
     /**
-     * Class for Fibonacci head nodes.
+     * NOT IMPLEMENTED
+     * @param index NOT IMPLEMENTED
+     * @param newValue NOT IMPLEMENTED
      */
-    class Node {
-        int value;
-        int degree;
-        Node parent;
-        Node child;
-        Node left;
-        Node right;
+    @Override
+    public void decreaseKey(int index, int newValue) {
+        // NOT IMPLEMENTED
+    }
 
-        /**
-         * Initializes a new head with value x.
-         * @param x value that the head is initialized with.
-         */
-        public Node(int x) {
-            value = x;
-            degree = 0;
-            parent = null;
-            child = null;
-            left = this;
-            right = this;
+    /**
+     * Method that cuts the node and puts it in root list.
+     * @param node that is being removed.
+     * @param parent parent node of the node.
+     */
+    public void cut(Node node, Node parent) {
+        node.getLeft().setRight(node.getRight());
+        node.getRight().setLeft(node.getLeft());
+        parent.setDegree(parent.getDegree() + 1);
+        if (parent.getChild() == node) {
+            parent.setChild(node.getRight());
         }
+        if (parent.getDegree() == 0) {
+            parent.setChild(null);
+        }
+        node.setLeft(min);
+        node.setRight(min.getRight());
+        min.setRight(node);
+        node.getRight().setLeft(node);
+        node.setParent(null);
+        node.decolor();
+    }
 
-        /**
-         * This method turns caller node to child node of the parameter node.
-         * @param parent node that is being linked as parent.
-         */
-        public void link(Node parent) {
-            left.right = right;
-            right.left = left;
-            this.parent = parent;
-            if (parent.child == null) {
-                parent.child = this;
-                right = this;
-                left = this;
+    /**
+     * Method that travels the tree upwards cutting all the
+     * nodes that are colored and adds them to root list.
+     * Stops at the first uncolored node ands colors it.
+     * @param node where the cutting begins.
+     */
+    public void cascadeCut(Node node) {
+        Node parent = node.getParent();
+        if (parent != null) {
+            if (!node.getColored()) {
+                node.color();
             } else {
-                left = parent.child;
-                right = parent.child.right;
-                parent.child.right = this;
-                right.left = this;
+                cut(node, parent);
+                cascadeCut(parent);
             }
-            parent.degree++;
         }
     }
 }

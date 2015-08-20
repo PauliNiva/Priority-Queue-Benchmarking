@@ -39,7 +39,7 @@ public class FibonacciHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin());
+        Assert.assertEquals(2, heap.findMin().getValue());
     }
 
     @Test
@@ -55,9 +55,9 @@ public class FibonacciHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.deleteMin());
-        Assert.assertEquals(5, heap.deleteMin());
-        Assert.assertEquals(7, heap.deleteMin());
+        Assert.assertEquals(2, heap.deleteMin().getValue());
+        Assert.assertEquals(5, heap.deleteMin().getValue());
+        Assert.assertEquals(7, heap.deleteMin().getValue());
     }
 
     @Test
@@ -82,9 +82,9 @@ public class FibonacciHeapTest {
         anotherHeap.insert(543);
         anotherHeap.insert(25);
         FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
-        Assert.assertEquals(3, mergedHeap.deleteMin());
-        Assert.assertEquals(4, mergedHeap.deleteMin());
-        Assert.assertEquals(5, mergedHeap.deleteMin());
+        Assert.assertEquals(3, mergedHeap.deleteMin().getValue());
+        Assert.assertEquals(4, mergedHeap.deleteMin().getValue());
+        Assert.assertEquals(5, mergedHeap.deleteMin().getValue());
     }
 
     @Test
@@ -102,29 +102,29 @@ public class FibonacciHeapTest {
 
     @Test
     public void deleteMinOnAnEmptyHeap() {
-        Assert.assertEquals(Integer.MIN_VALUE, heap.deleteMin());
+        Assert.assertEquals(null, heap.deleteMin());
     }
 
     @Test
     public void consolidatesTreesBranchesWork() {
         heap.insert(23);
-        Assert.assertEquals(23, heap.deleteMin());
+        Assert.assertEquals(23, heap.deleteMin().getValue());
         FibonacciHeap anotherHeap = new FibonacciHeap();
         heap.insert(14);
         anotherHeap.insert(41);
-        Assert.assertEquals(14, heap.deleteMin());
+        Assert.assertEquals(14, heap.deleteMin().getValue());
         heap.clear();
         heap.insert(41);
         anotherHeap.insert(14);
         FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
-        Assert.assertEquals(14, mergedHeap.deleteMin());
+        Assert.assertEquals(14, mergedHeap.deleteMin().getValue());
     }
 
     @Test
     public void mergeTwoEmptyFibonacciHeaps() {
         FibonacciHeap anotherHeap = new FibonacciHeap();
         FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
-        Assert.assertEquals(Integer.MIN_VALUE, mergedHeap.deleteMin());
+        Assert.assertEquals(null, mergedHeap.deleteMin());
     }
 
     @Test
@@ -132,7 +132,7 @@ public class FibonacciHeapTest {
         FibonacciHeap anotherHeap = new FibonacciHeap();
         heap.insert(2);
         FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
-        Assert.assertEquals(2, mergedHeap.deleteMin());
+        Assert.assertEquals(2, mergedHeap.deleteMin().getValue());
     }
 
     @Test
@@ -149,9 +149,9 @@ public class FibonacciHeapTest {
         anotherHeap.insert(543);
         anotherHeap.insert(25);
         FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
-        Assert.assertEquals(3, mergedHeap.deleteMin());
-        Assert.assertEquals(4, mergedHeap.deleteMin());
-        Assert.assertEquals(5, mergedHeap.deleteMin());
+        Assert.assertEquals(3, mergedHeap.deleteMin().getValue());
+        Assert.assertEquals(4, mergedHeap.deleteMin().getValue());
+        Assert.assertEquals(5, mergedHeap.deleteMin().getValue());
     }
 
     @Test
@@ -176,16 +176,66 @@ public class FibonacciHeapTest {
         heap.insert(543);
         anotherHeap.insert(25);
         FibonacciHeap mergedHeap = heap.merge(heap, anotherHeap);
-        Assert.assertEquals(3, mergedHeap.deleteMin());
-        Assert.assertEquals(4, mergedHeap.deleteMin());
-        Assert.assertEquals(5, mergedHeap.deleteMin());
+        Assert.assertEquals(3, mergedHeap.deleteMin().getValue());
+        Assert.assertEquals(4, mergedHeap.deleteMin().getValue());
+        Assert.assertEquals(5, mergedHeap.deleteMin().getValue());
     }
 
     @Test
     public void mergeTwoFibonacciHeapsWhenOtherIsNull() {
         FibonacciHeap mergedHeap = heap.merge(heap, null);
-        Assert.assertEquals(Integer.MIN_VALUE, mergedHeap.deleteMin());
+        Assert.assertEquals(null, mergedHeap.deleteMin());
         FibonacciHeap anotherMergedHeap = heap.merge(null, heap);
-        Assert.assertEquals(Integer.MIN_VALUE, anotherMergedHeap.deleteMin());
+        Assert.assertEquals(null, anotherMergedHeap.deleteMin());
+    }
+
+    @Test
+    public void decreaseKeyWorks() {
+        Node node1 = new Node(13);
+        Node node2 = new Node(34);
+        Node node3 = new Node(14);
+        Node node4= new Node(124);
+        Node node5 = new Node(18);
+        heap.insert(node5);
+        Assert.assertEquals(18, heap.findMin().getValue());
+        heap.decreaseKey(node5, 17);
+        Assert.assertEquals(17, heap.findMin().getValue());
+        heap.insert(node2);
+        heap.insert(node1);
+        Assert.assertEquals(13, heap.findMin().getValue());
+        heap.decreaseKey(node5, 12);
+        Assert.assertEquals(12, heap.findMin().getValue());
+        heap.insert(node4);
+        heap.insert(node3);
+        heap.decreaseKey(node4, 10);
+        Assert.assertEquals(10, heap.findMin().getValue());
+        heap.decreaseKey(node5, 11);
+        heap.decreaseKey(node5, 17);
+        heap.decreaseKey(node5, 9);
+    }
+
+    @Test
+    public void cutWorks() {
+        Node node1 = new Node(13);
+        Node node2 = new Node(34);
+        Node node3 = new Node(14);
+        Node node4= new Node(124);
+        Node node5 = new Node(18);
+        Node node6 = new Node(114);
+        heap.insert(node5);
+        Assert.assertEquals(18, heap.findMin().getValue());
+        heap.decreaseKey(node5, 17);
+        Assert.assertEquals(17, heap.findMin().getValue());
+        heap.insert(node2);
+        heap.insert(node1);
+        Assert.assertEquals(13, heap.findMin().getValue());
+        heap.decreaseKey(node5, 12);
+        Assert.assertEquals(12, heap.findMin().getValue());
+        heap.insert(node4);
+        heap.insert(node3);
+        heap.decreaseKey(node4, 10);
+        Assert.assertEquals(10, heap.findMin().getValue());
+        heap.cut(node2, node1);
+        heap.cascadeCut(node6);
     }
 }
