@@ -39,7 +39,7 @@ public class PairingHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin().getValue());
+        Assert.assertEquals(2, heap.findMinNode().getValue());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PairingHeapTest {
     public void heapIsEmptyAfterInsertAndDelete() {
         Assert.assertTrue(heap.isEmpty());
         heap.insert(3);
-        Assert.assertEquals(3, heap.findMin().getValue());
+        Assert.assertEquals(3, heap.findMinNode().getValue());
         Assert.assertFalse(heap.isEmpty());
         Assert.assertEquals(3, heap.deleteMin().getValue());
         Assert.assertTrue(heap.isEmpty());

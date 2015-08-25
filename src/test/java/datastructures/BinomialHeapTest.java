@@ -39,7 +39,7 @@ public class BinomialHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin().getValue());
+        Assert.assertEquals(2, heap.findMinNode().getValue());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         anotherHeap.insert(543);
         anotherHeap.insert(25);
-        heap.merge(anotherHeap.findMinRoot());
+        heap.merge(anotherHeap.findMinNode());
         Assert.assertEquals(3, heap.deleteMin().getValue());
         Assert.assertEquals(4, heap.deleteMin().getValue());
         Assert.assertEquals(5, heap.deleteMin().getValue());
@@ -118,10 +118,9 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         anotherHeap.insert(543);
         anotherHeap.insert(25);
-        heap.merge(anotherHeap.findMinRoot());
+        heap.merge(anotherHeap.findMinNode());
         Assert.assertEquals(3, heap.deleteMin().getValue());
         Assert.assertEquals(4, heap.deleteMin().getValue());
-        Assert.assertEquals(5, heap.deleteMin().getValue());
     }
 
     @Test
@@ -141,22 +140,10 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         heap.insert(543);
         heap.insert(25);
-        heap.merge(anotherHeap.findMinRoot());
+        heap.merge(anotherHeap.findMinNode());
         Assert.assertEquals(3, heap.deleteMin().getValue());
         Assert.assertEquals(4, heap.deleteMin().getValue());
         Assert.assertEquals(5, heap.deleteMin().getValue());
     }
 
-    @Test
-    public void decreaseKeyWorks() {
-        heap.insert(3);
-        heap.insert(5);
-        heap.insert(8);
-        heap.insert(2);
-        heap.decreaseKey(3, 15);
-        heap.decreaseKey(233, 122);
-        Assert.assertEquals(2, heap.findMin().getValue());
-        heap.decreaseKey(3, 1);
-        Assert.assertEquals(1, heap.deleteMin().getValue());
-    }
 }

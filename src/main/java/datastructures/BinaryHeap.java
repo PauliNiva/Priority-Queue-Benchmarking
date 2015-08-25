@@ -21,6 +21,10 @@ public class BinaryHeap implements Heap {
         heapSize = 0;
     }
 
+    public int getHeapSize() {
+        return heapSize;
+    }
+
     /**
      * Inserts node to the heap.
      * It does this by putting the node in after the last node in array.
@@ -29,6 +33,7 @@ public class BinaryHeap implements Heap {
      */
     @Override
     public void insert(Node node) {
+        node.setIndex(heapSize);
         array[heapSize] = node;
         siftUp(heapSize);
         heapSize++;
@@ -44,6 +49,7 @@ public class BinaryHeap implements Heap {
     @Override
     public void insert(int value) {
         Node node = new Node(value);
+        node.setIndex(heapSize);
         array[heapSize] = node;
         siftUp(heapSize);
         heapSize++;
@@ -55,7 +61,7 @@ public class BinaryHeap implements Heap {
      * which is at the root. If the array is empty, it returns null.
      */
     @Override
-    public Node findMin() {
+    public Node findMinNode() {
         if (isEmpty()) {
             return null;
         } else {
@@ -69,7 +75,7 @@ public class BinaryHeap implements Heap {
      * which is at the root. If the array is empty, it returns null.
      */
     @Override
-    public int findMinimum() {
+    public int findMinValue() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;
         } else {
@@ -104,7 +110,6 @@ public class BinaryHeap implements Heap {
      * @param index index at which the value that is being decreased resides.
      * @param newValue new value that is being inserted.
      */
-    @Override
     public void decreaseKey(int index, int newValue) {
         if (array[index].getValue() > newValue) {
             array[index].setValue(newValue);
@@ -113,13 +118,13 @@ public class BinaryHeap implements Heap {
     }
 
     /**
-     * NOT IMPLEMENTED
-     * @param node NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
+     * Method for decreasing the value of a specific node.
+     * @param index index at which the value that is being decreased resides.
+     * @param newValue new value that is being inserted.
      */
     @Override
-    public void decreaseKey(Node node, int newValue) {
-        // NOT IMPLEMENTED
+    public void decreaseKey(Node index, int newValue) {
+        decreaseKey(index.getIndex(), newValue);
     }
 
     /**
@@ -142,7 +147,9 @@ public class BinaryHeap implements Heap {
             parentIndex = getParentIndex(index);
             if (array[parentIndex].getValue() > array[index].getValue()) {
                 tmp = array[parentIndex];
+                array[index].setIndex(parentIndex);
                 array[parentIndex] = array[index];
+                tmp.setIndex(index);
                 array[index] = tmp;
                 siftUp(parentIndex);
             }
@@ -174,7 +181,9 @@ public class BinaryHeap implements Heap {
         }
         if (array[index].getValue() > array[minIndex].getValue()) {
             tmp = array[minIndex];
+            array[index].setIndex(minIndex);
             array[minIndex] = array[index];
+            tmp.setIndex(index);
             array[index] = tmp;
             siftDown(minIndex);
         }

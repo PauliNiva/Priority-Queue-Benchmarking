@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class Node {
 
-    private int node;
+    private int dijkstraPriority;
     private int value;
     private int sValue;
     private int degree;
@@ -24,13 +24,16 @@ public class Node {
     private Node rightChild;
     private Node nextSibling;
     private Node previousSibling;
-    private boolean colored = false;
+    private boolean colored;
+    private int index;
 
     /**
-     * Initializes a new node with value x.
-     * @param x value that is being inserted into the node.
+     * Initializes a new dijkstraPriority with value x.
+     * @param x value that is being inserted into the dijkstraPriority.
      */
     public Node(int x) {
+        index = 0;
+        dijkstraPriority = x;
         value = x;
         degree = 0;
         parent = null;
@@ -41,10 +44,11 @@ public class Node {
         rightChild = null;
         previousSibling = null;
         priority = new Random().nextInt();
+        colored = false;
     }
 
     /**
-     * Constructs the node with value, references to both childs and
+     * Constructs the dijkstraPriority with value, references to both childs and
      * initial s-value of 0.
      * @param value numerical value being set as int.
      * @param leftChild reference to nodes leftChild child.
@@ -59,9 +63,9 @@ public class Node {
     }
 
     /**
-     * Initializes a new null node.
-     * @param x Value of null node.
-     * @param y Priority of null node.
+     * Initializes a new null dijkstraPriority.
+     * @param x Value of null dijkstraPriority.
+     * @param y Priority of null dijkstraPriority.
      */
     public Node(int x, int y) {
         value  = x;
@@ -71,8 +75,8 @@ public class Node {
     }
 
     /**
-     * This method turns caller node to child node of the parameter node.
-     * @param parent node that is being linked as parent.
+     * This method turns caller dijkstraPriority to child dijkstraPriority of the parameter dijkstraPriority.
+     * @param parent dijkstraPriority that is being linked as parent.
      */
     public void link(Node parent) {
         left.right = right;
@@ -94,7 +98,7 @@ public class Node {
     /**
      * This is an auxiliary method for deleteMin method.
      * It reverses the root list.
-     * @param tmp the min node of the root list to be reversed.
+     * @param tmp the min dijkstraPriority of the root list to be reversed.
      * @return the min of the reversed root list.
      */
     public Node reverseRootList(Node tmp) {
@@ -108,47 +112,28 @@ public class Node {
         return newHead;
     }
 
-    /**
-     * Method to find a node with a specific value.
-     * @param value value of the node that is being searched.
-     * @return the node with the speficied value.
-     */
-    public Node findANodeWithValue(int value) {
-        Node node = null;
-        Node tmp = this;
-        while (tmp != null) {
-            if (tmp.value == value) {
-                node = tmp;
-                break;
-            }
-            if (tmp.child == null) {
-                tmp = tmp.sibling;
-            } else {
-                node = tmp.child.findANodeWithValue(value);
-                if (node == null) {
-                    tmp = tmp.sibling;
-                } else {
-                    break;
-                }
-            }
-        }
-        return node;
+    public int getIndex(){
+        return index;
+    }
+
+    public void setIndex(int newIndex) {
+        index = newIndex;
     }
 
     /**
-     * Gets the node.
-     * @return node as int.
+     * Gets the dijkstraPriority.
+     * @return dijkstraPriority as int.
      */
-    public int getNode(){
-        return node;
+    public int getDijkstraPriority(){
+        return dijkstraPriority;
     }
 
     /**
-     * Sets the node as specific value.
+     * Sets the dijkstraPriority as specific value.
      * @param value integer that is being set.
      */
-    public void setNode(int value){
-        this.node = value;
+    public void setDijkstraPriority(int value){
+        this.dijkstraPriority = value;
     }
 
     /**
@@ -216,31 +201,31 @@ public class Node {
     }
 
     /**
-     * Gets the parent node.
-     * @return parent node.
+     * Gets the parent dijkstraPriority.
+     * @return parent dijkstraPriority.
      */
     public Node getParent() {
         return parent;
     }
 
     /**
-     * Sets the parent node
-     * @param node node being set as parent.
+     * Sets the parent dijkstraPriority
+     * @param node dijkstraPriority being set as parent.
      */
     public void setParent(Node node) {
         parent = node;
     }
 
     /**
-     * Gets the left node.
-     * @return node.
+     * Gets the left dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getLeft() {
         return left;
     }
 
     /**
-     * Sets the left node.
+     * Sets the left dijkstraPriority.
      * @param node that is being set.
      */
     public void setLeft(Node node) {
@@ -248,15 +233,15 @@ public class Node {
     }
 
     /**
-     * Gets the right node.
-     * @return node.
+     * Gets the right dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getRight() {
         return right;
     }
 
     /**
-     * Sets the right node.
+     * Sets the right dijkstraPriority.
      * @param node that is being set.
      */
     public void setRight(Node node) {
@@ -264,15 +249,15 @@ public class Node {
     }
 
     /**
-     * Gets the child node.
-     * @return node.
+     * Gets the child dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getChild() {
         return child;
     }
 
     /**
-     * Sets the child node.
+     * Sets the child dijkstraPriority.
      * @param node that is being set.
      */
     public void setChild(Node node) {
@@ -280,15 +265,15 @@ public class Node {
     }
 
     /**
-     * Gets the sibling node.
-     * @return node.
+     * Gets the sibling dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getSibling() {
         return sibling;
     }
 
     /**
-     * Sets the sibling node.
+     * Sets the sibling dijkstraPriority.
      * @param node that is being set.
      */
     public void setSibling(Node node) {
@@ -296,15 +281,15 @@ public class Node {
     }
 
     /**
-     * Gets the left child node..
-     * @return node.
+     * Gets the left child dijkstraPriority..
+     * @return dijkstraPriority.
      */
     public Node getLeftChild() {
         return leftChild;
     }
 
     /**
-     * Sets the left child node.
+     * Sets the left child dijkstraPriority.
      * @param node that is being set.
      */
     public void setLeftChild(Node node) {
@@ -312,15 +297,15 @@ public class Node {
     }
 
     /**
-     * Gets the right child node.
-     * @return node.
+     * Gets the right child dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getRightChild() {
         return rightChild;
     }
 
     /**
-     * Sets the right child node.
+     * Sets the right child dijkstraPriority.
      * @param node that is being set.
      */
     public void setRightChild(Node node) {
@@ -328,15 +313,15 @@ public class Node {
     }
 
     /**
-     * Gets the next sibling node.
-     * @return node.
+     * Gets the next sibling dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getNextSibling() {
         return nextSibling;
     }
 
     /**
-     * Sets the next sibling node.
+     * Sets the next sibling dijkstraPriority.
      * @param node that is being set.
      */
     public void setNextSibling(Node node) {
@@ -344,15 +329,15 @@ public class Node {
     }
 
     /**
-     * Gets the previous sibling node.
-     * @return node.
+     * Gets the previous sibling dijkstraPriority.
+     * @return dijkstraPriority.
      */
     public Node getPreviousSibling() {
         return previousSibling;
     }
 
     /**
-     * Sets the previous sibling node.
+     * Sets the previous sibling dijkstraPriority.
      * @param node that is being set.
      */
     public void setPreviousSibling(Node node) {
@@ -360,9 +345,9 @@ public class Node {
     }
 
     /**
-     * Gets the boolean value if the node is colored
+     * Gets the boolean value if the dijkstraPriority is colored
      * or not.
-     * @return true, if node is colored, false otherwise.
+     * @return true, if dijkstraPriority is colored, false otherwise.
      */
     public boolean getColored() {
         return colored;

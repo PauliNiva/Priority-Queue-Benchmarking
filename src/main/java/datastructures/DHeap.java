@@ -23,9 +23,22 @@ public class DHeap implements Heap {
         d = numberOfChildren;
     }
 
+    public int getHeapSize() {
+        return heapSize;
+    }
+
+    /**
+     * Inserts a node to the heap.
+     * This is done by putting it in after the arrays last node.
+     * Then it heaps it up until the heap property is restored.
+     * @param node node that is being inserted.
+     */
     @Override
     public void insert(Node node) {
-        // NOT IMPLEMENTED
+        node.setIndex(heapSize);
+        array[heapSize] = node;
+        siftUp(heapSize);
+        heapSize++;
     }
 
     /**
@@ -33,11 +46,12 @@ public class DHeap implements Heap {
      * It does this by creating a new node with value and putting
      * it in after the arrays last node. Then it heaps it up until
      * the heap property is restored.
-     * @param x int that is being inserted.
+     * @param value int that is being inserted.
      */
     @Override
-    public void insert(int x) {
-        Node node = new Node(x);
+    public void insert(int value) {
+        Node node = new Node(value);
+        node.setIndex(heapSize);
         array[heapSize] = node;
         siftUp(heapSize);
         heapSize++;
@@ -49,7 +63,7 @@ public class DHeap implements Heap {
      * which is at the root. If the array is empty, it returns null.
      */
     @Override
-    public Node findMin() {
+    public Node findMinNode() {
         if (isEmpty()) {
             return null;
         } else {
@@ -63,7 +77,7 @@ public class DHeap implements Heap {
      * otherwise it returns the Integer min value.
      */
     @Override
-    public int findMinimum() {
+    public int findMinValue() {
         if (isEmpty()) {
             return Integer.MIN_VALUE;
         } else {
@@ -84,6 +98,7 @@ public class DHeap implements Heap {
             return null;
         } else {
             removed = array[ROOT];
+            array[heapSize - 1].setIndex(ROOT);
             array[ROOT] = array[heapSize - 1];
             heapSize--;
             if (!isEmpty()) {
@@ -94,13 +109,13 @@ public class DHeap implements Heap {
     }
 
     /**
-     * NOT IMPLEMENTED
-     * @param node NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
+     * Method for decreasing the value of a specific node.
+     * @param node node whose value is being decreased.
+     * @param newValue new value that is being inserted.
      */
     @Override
     public void decreaseKey(Node node, int newValue) {
-        // NOT IMPLEMENTED
+        decreaseKey(node.getIndex(), newValue);
     }
 
     /**
@@ -135,7 +150,9 @@ public class DHeap implements Heap {
             parentIndex = getParentIndex(index);
             if (array[parentIndex].getValue() > array[index].getValue()) {
                 tmp = array[parentIndex];
+                array[index].setIndex(parentIndex);
                 array[parentIndex] = array[index];
+                tmp.setIndex(index);
                 array[index] = tmp;
                 siftUp(parentIndex);
             }
@@ -153,12 +170,14 @@ public class DHeap implements Heap {
         while (getNthChildIndex(index, 1) < heapSize) {
             child = getMinChild(index);
             if (array[child].getValue() < tmp.getValue()) {
+                array[child].setIndex(index);
                 array[index] = array[child];
             } else {
                 break;
             }
             index = child;
         }
+        tmp.setIndex(index);
         array[index] = tmp;
     }
 

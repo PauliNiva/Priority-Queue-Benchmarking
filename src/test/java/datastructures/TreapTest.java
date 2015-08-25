@@ -22,7 +22,7 @@ public class TreapTest {
 
     @Test
     public void emptyTreapFindMinReturnsCorrectly() {
-        Assert.assertEquals(null, treap.findMin());
+        Assert.assertEquals(null, treap.findMinNode());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class TreapTest {
         treap.insert(112);
         treap.insert(124);
         treap.insert(5);
-        Assert.assertEquals(2, treap.findMin().getValue());
+        Assert.assertEquals(2, treap.findMinNode().getValue());
     }
 
     @Test
@@ -60,11 +60,11 @@ public class TreapTest {
         treap.insert(112);
         treap.insert(1266);
         treap.insert(5);
-        Assert.assertEquals(2, treap.findMin().getValue());
-        treap.remove(treap.findMinimum());
-        Assert.assertEquals(5, treap.findMin().getValue());
-        treap.remove(treap.findMinimum());
-        Assert.assertEquals(7, treap.findMin().getValue());
+        Assert.assertEquals(2, treap.findMinNode().getValue());
+        treap.remove(treap.findMinValue());
+        Assert.assertEquals(5, treap.findMinNode().getValue());
+        treap.remove(treap.findMinValue());
+        Assert.assertEquals(7, treap.findMinNode().getValue());
     }
 
     @Test

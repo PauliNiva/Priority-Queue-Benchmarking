@@ -10,12 +10,18 @@ package datastructures;
 public class FibonacciHeap implements Heap {
 
     private Node min;
+    private int heapSize;
 
     /**
      * Initializes a new empty Fibonacci heap.
      */
     public FibonacciHeap() {
         min = null;
+        heapSize = 0;
+    }
+
+    public int getHeapSize() {
+        return heapSize;
     }
 
     /**
@@ -36,6 +42,7 @@ public class FibonacciHeap implements Heap {
                 min = node;
             }
         }
+        heapSize++;
     }
 
     /**
@@ -45,17 +52,7 @@ public class FibonacciHeap implements Heap {
     @Override
     public void insert(int value) {
         Node node = new Node(value);
-        if (isEmpty()) {
-            min = node;
-        } else {
-            node.setRight(min);
-            node.setLeft(min.getLeft());
-            min.setLeft(node);
-            node.getLeft().setRight(node);
-            if (value < min.getValue()) {
-                min = node;
-            }
-        }
+        insert(node);
     }
 
     /**
@@ -63,7 +60,10 @@ public class FibonacciHeap implements Heap {
      * @return minimum node.
      */
     @Override
-    public Node findMin() {
+    public Node findMinNode() {
+        if (heapSize == 0){
+            return null;
+        }
         return min;
     }
 
@@ -72,7 +72,7 @@ public class FibonacciHeap implements Heap {
      * @return value of the minimum node as int.
      */
     @Override
-    public int findMinimum() {
+    public int findMinValue() {
         return min.getValue();
     }
 
@@ -89,8 +89,13 @@ public class FibonacciHeap implements Heap {
         } else {
             if (tmp.getChild() != null) {
                 tmp.getChild().setParent(null);
+                Node loopPreventer = tmp.getChild().getRight();
                 for (Node node = tmp.getChild().getRight(); node != tmp.getChild(); node = node.getRight()) {
-                    node.setParent(null);
+                    if (loopPreventer.equals(node)) {
+                        break;
+                    } else {
+                        node.setParent(null);
+                    }
                 }
                 Node minLeft = min.getLeft();
                 Node tmpChildLeft = tmp.getChild().getLeft();
@@ -107,7 +112,25 @@ public class FibonacciHeap implements Heap {
                 min = tmp.getRight();
                 consolidateTrees();
             }
+            heapSize--;
             return tmp;
+        }
+    }
+
+    /**
+     * Method to decrease the value of a node.
+     * @param node whose value is being decreased.
+     * @param newValue the new value being inserted to a node.
+     */
+    public void decreaseKey(Node node, int newValue) {
+        node.setValue(newValue);
+        Node parent = node.getParent();
+        if ((parent != null) && (node.getValue() < parent.getValue())) {
+            cut(node, parent);
+            cascadeCut(parent);
+        }
+        if (min == null || node.getValue() < min.getValue()) {
+            min = node;
         }
     }
 
@@ -193,33 +216,6 @@ public class FibonacciHeap implements Heap {
     }
 
     /**
-     * Method to decrease the value of a node.
-     * @param node whose value is being decreased.
-     * @param newValue the new value being inserted to a node.
-     */
-    public void decreaseKey(Node node, int newValue) {
-        node.setValue(newValue);
-        Node parent = node.getParent();
-        if ((parent != null) && (node.getValue() < parent.getValue())) {
-            cut(node, parent);
-            cascadeCut(parent);
-        }
-        if (node.getValue() < min.getValue()) {
-            min = node;
-        }
-    }
-
-    /**
-     * NOT IMPLEMENTED
-     * @param index NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
-     */
-    @Override
-    public void decreaseKey(int index, int newValue) {
-        // NOT IMPLEMENTED
-    }
-
-    /**
      * Method that cuts the node and puts it in root list.
      * @param node that is being removed.
      * @param parent parent node of the node.
@@ -260,3 +256,4 @@ public class FibonacciHeap implements Heap {
         }
     }
 }
+

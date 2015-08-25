@@ -5,9 +5,9 @@ public interface Heap {
 
     void insert(Node node);
     void insert(int value);
-    Node findMin();
-    int findMinimum();
+    Node findMinNode();
+    int findMinValue();
     Node deleteMin();
     void decreaseKey(Node node, int newValue);
-    void decreaseKey(int index, int newValue);
+    int getHeapSize();
 }

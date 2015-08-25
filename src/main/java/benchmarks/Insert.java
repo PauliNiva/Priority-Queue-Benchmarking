@@ -4,6 +4,9 @@ import datastructures.*;
 
 import java.util.Random;
 
+/**
+ * Class for benchmarking the insertion capabilities of the different heaps.
+ */
 public class Insert {
 
     private int[] array;
@@ -26,7 +29,7 @@ public class Insert {
     private int[] createArrayWithRandomValues(int arraySize) {
         int[] array = new int[arraySize];
         for (int i = 0; i < arraySize; i++) {
-            array[i] = new Random().nextInt();
+            array[i] = Math.abs(new Random().nextInt());
         }
         return array;
     }
@@ -123,8 +126,8 @@ public class Insert {
         treapTimer /= 10 * 1000000;
 
         System.out.println("Average inserting time when the number \nof the integers being inserted was " + arraySize + ":\n");
-        System.out.println("Binary heap: " + binary + " ns.");
-        System.out.println("Binomial heap: " + binomial + " ns.");
+        System.out.println("Binary heap: " + binary + " ms.");
+        System.out.println("Binomial heap: " + binomial + " ms.");
         System.out.println("Fibonacci heap: " + fibonacci + " ms.");
         System.out.println("Leftist heap: " + leftist + " ms.");
         System.out.println("Pairing heap: " + pairing + " ms.");

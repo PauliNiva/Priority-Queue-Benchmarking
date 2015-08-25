@@ -30,11 +30,11 @@ public class PairingHeap implements Heap {
 
     /**
      * Inserts a new node of value x into the heap.
-     * @param x value of the node that is being added.
+     * @param value value of the node that is being added.
      */
     @Override
-    public void insert(int x) {
-        Node node = new Node(x);
+    public void insert(int value) {
+        Node node = new Node(value);
         if (isEmpty()) {
             root = node;
         } else {
@@ -47,7 +47,7 @@ public class PairingHeap implements Heap {
      * @return value of the root as int.
      */
     @Override
-    public Node findMin() {
+    public Node findMinNode() {
         return root;
     }
 
@@ -56,7 +56,7 @@ public class PairingHeap implements Heap {
      * @return the minimum value of the heap as int.
      */
     @Override
-    public int findMinimum() {
+    public int findMinValue() {
         return root.getValue();
     }
 
@@ -68,14 +68,15 @@ public class PairingHeap implements Heap {
     public Node deleteMin() {
         if (isEmpty()) {
             return null;
-        }
-        Node min = root;
-        if (root.getLeftChild() == null) {
-            root = null;
         } else {
-            root = mergePairs(root.getLeftChild());
+            Node min = root;
+            if (root.getLeftChild() == null) {
+                root = null;
+            } else {
+                root = mergePairs(root.getLeftChild());
+            }
+            return min;
         }
-        return min;
     }
 
     /**
@@ -85,16 +86,6 @@ public class PairingHeap implements Heap {
      */
     @Override
     public void decreaseKey(Node node, int newValue) {
-        // NOT IMPLEMENTED
-    }
-
-    /**
-     * NOT IMPLEMENTED
-     * @param index NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
-     */
-    @Override
-    public void decreaseKey(int index, int newValue) {
         // NOT IMPLEMENTED
     }
 
@@ -151,22 +142,22 @@ public class PairingHeap implements Heap {
 
     /**
      * Method that merges the subheaps in pairs with two pass merge.
-     * @param x the root node.
+     * @param node the root node.
      * @return merged heaps root node.
      */
-    public Node mergePairs(Node x) {
-        if (x == null) {
+    public Node mergePairs(Node node) {
+        if (node == null) {
             return null;
         }
-        if (x.getNextSibling() == null) {
-            return x;
+        if (node.getNextSibling() == null) {
+            return node;
         }
         int numSiblings;
-        for (numSiblings = 0; x != null; numSiblings++) {
+        for (numSiblings = 0; node != null; numSiblings++) {
             array = growArrayIfNeeded(array, numSiblings);
-            array[numSiblings] = x;
-            x.getPreviousSibling().setNextSibling(null);
-            x = x.getNextSibling();
+            array[numSiblings] = node;
+            node.getPreviousSibling().setNextSibling(null);
+            node = node.getNextSibling();
         }
         array = growArrayIfNeeded(array, numSiblings);
         array[numSiblings] = null;
@@ -199,5 +190,9 @@ public class PairingHeap implements Heap {
         } else {
             return array;
         }
+    }
+
+    public int getHeapSize() {
+        return 0;
     }
 }

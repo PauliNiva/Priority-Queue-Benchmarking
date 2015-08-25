@@ -5,6 +5,9 @@ import datastructures.*;
 
 import java.util.Random;
 
+/**
+ * Class for benchmarking the delete capabilities of different heaps.
+ */
 public class Delete {
 
     private int[] array;
@@ -148,8 +151,8 @@ public class Delete {
         treapTimer /= 10 * 1000000;
 
         System.out.println("Average deleting time when the number \nof the integers being deleted was " + arraySize + ":\n");
-        System.out.println("Binary heap: " + binary + " ns.");
-        System.out.println("Binomial heap: " + binomial + " ns.");
+        System.out.println("Binary heap: " + binary + " ms.");
+        System.out.println("Binomial heap: " + binomial + " ms.");
         System.out.println("Fibonacci heap: " + fibonacci + " ms.");
         System.out.println("Leftist heap: " + leftist + " ms.");
         System.out.println("Pairing heap: " + pairing + " ms.");

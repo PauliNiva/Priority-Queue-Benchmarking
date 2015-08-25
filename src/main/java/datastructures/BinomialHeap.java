@@ -3,63 +3,91 @@ package datastructures;
 /**
  * Binomial heap is a heap similar to a binary heap but also supports quick merging of two heaps
  * by using a binomial tree structure. These have to satisfy the binomial heap properties that are,
- * that each binomial tree in a heap obeys the min-heap property and that there can only be either
+ * that each binomial tree in a heap obeys the heap-heap property and that there can only be either
  * one or zero binomial trees for each order, including zero order.
  */
 public class BinomialHeap implements Heap {
 
-    private Node min;
+    private Node heap;
+    int heapSize;
 
     /**
      * Initializes a new empty binomial heap.
      */
     public BinomialHeap() {
-        min = null;
+        heap = null;
+    }
+
+    public int getHeapSize() {
+        return heapSize;
     }
 
     /**
-     * NOT IMPLEMENTED
-     * @param node NOT IMPLEMENTED
+     * Inserts a node into the heap by merging with
+     * existing tree.
+     * @param node node that is being added.
      */
     @Override
     public void insert(Node node) {
-        // NOT IMPLEMENTED
+        if (isEmpty()) {
+            heap = node;
+            heapSize++;
+        } else {
+            merge(node);
+            heapSize++;
+        }
     }
 
     /**
-     * Inserts a new node of value x into the min
+     * Inserts a new node of value x into the heap
      * by merging it with the existing tree.
-     * @param x value of the node that is being added.
+     * @param value value of the node that is being added.
      */
     @Override
-    public void insert(int x) {
-            Node node = new Node(x);
-            if (isEmpty()) {
-                min = node;
-            } else {
-                merge(node);
-            }
+    public void insert(int value) {
+        Node node = new Node(value);
+        if (isEmpty()) {
+            heap = node;
+            heapSize++;
+        } else {
+            merge(node);
+            heapSize++;
+        }
     }
 
     /**
-     * Finds the minimum node in the heap.
-     * @return minimum node.
+     * Finds the minimum amongst the roots of the binomial trees.
+     * @return minimum heap.
      */
-    @Override
-    public Node findMin() {
-        return findMinRoot();
+    public Node findMinNode() {
+        Node tmp = heap;
+        Node minRoot = heap;
+        int minValue;
+        if (heap != null) {
+            minValue = tmp.getValue();
+        } else {
+            minValue = Integer.MAX_VALUE;
+        }
+        while (tmp != null) {
+            if (tmp.getValue() < minValue) {
+                minRoot = tmp;
+                minValue = minRoot.getValue();
+            }
+            tmp = tmp.getSibling();
+        }
+        return minRoot;
     }
 
     /**
      * Finds tha value of minimum node.
-     * @return value of min node as int.
+     * @return value of heap node as int.
      */
     @Override
-    public int findMinimum() {
-        if (findMinRoot() != null) {
-            return findMinRoot().getValue();
+    public int findMinValue() {
+        if (findMinNode() != null) {
+            return findMinNode().getValue();
         } else {
-            return Integer.MIN_VALUE;
+            return Integer.MAX_VALUE;
         }
     }
 
@@ -72,83 +100,81 @@ public class BinomialHeap implements Heap {
         if (isEmpty()) {
             return null;
         } else {
-            Node minRoot = findMinRoot();
-            Node tmp = min;
+            Node minRoot = findMinNode();
+            Node tmp = heap;
             Node tmpPrev = null;
-            while (minRoot.getValue() != tmp.getValue()) {
-                tmpPrev = tmp;
-                tmp = tmp.getSibling();
+            if (minRoot != null || tmp != null) {
+                while (minRoot.getValue() != tmp.getValue()) {
+                    tmpPrev = tmp;
+                    tmp = tmp.getSibling();
+                }
+                if (tmpPrev == null) {
+                    heap = tmp.getSibling();
+                } else {
+                    tmpPrev.setSibling(tmp.getSibling());
+                }
+                tmp = tmp.getChild();
             }
-            if (tmpPrev == null) {
-                min = tmp.getSibling();
-            } else {
-                tmpPrev.setSibling(tmp.getSibling());
-            }
-            tmp = tmp.getChild();
             Node tmpOriginal = tmp;
             while (tmp != null) {
                 tmp.setParent(null);
                 tmp = tmp.getSibling();
             }
-            if ((min == null) && (tmpOriginal == null)) {
+            if ((heap == null) && (tmpOriginal == null)) {
             } else {
                 if (tmpOriginal == null) {
                 } else {
-                    if (min == null) {
-                        min = tmpOriginal.reverseRootList(null);
+                    if (heap == null) {
+                        heap = tmpOriginal.reverseRootList(null);
                     } else {
                         merge(tmpOriginal.reverseRootList(null));
                     }
                 }
             }
+            heapSize--;
             return minRoot;
         }
     }
 
     /**
-     * NOT IMPLEMENTED
-     * @param node NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
+     * Method for decreasing the value of the node.
+     * @param node node whose values are being decreased.
+     * @param newValue value to which the value of the node
+     *                 is being decreased to.
      */
     @Override
     public void decreaseKey(Node node, int newValue) {
-        // NOT IMPLEMENTED
-    }
-
-    /**
-     * Method to decrease the value of a node.
-     * @param oldValue value of the node that is being decreased.
-     * @param newValue the new value that is being inserted.
-     */
-    public void decreaseKey(int oldValue, int newValue) {
-        Node tmp = min.findANodeWithValue(oldValue);
-        if (tmp == null || oldValue <= newValue) {
-            return;
-        }
-        tmp.setValue(newValue);
-        Node tmpParent = tmp.getParent();
-        while ((tmpParent != null) && (tmp.getValue() < tmpParent.getValue())) {
-            int i = tmp.getValue();
-            tmp.setValue(tmpParent.getValue());
-            tmpParent.setValue(i);
-            tmp = tmpParent;
-            tmpParent = tmpParent.getParent();
+        if (node.getValue() > newValue) {
+            node.setValue(newValue);
+            while (node.getParent() != null && node.getParent().getValue() > newValue) {
+                int value = node.getValue();
+                int dijkstraPriority = node.getDijkstraPriority();
+                node.setValue(node.getParent().getValue());
+                node.setDijkstraPriority(node.getParent().getDijkstraPriority());
+                node.getParent().setValue(value);
+                node.getParent().setDijkstraPriority(dijkstraPriority);
+                node = node.getParent();
+            }
+            if (heap == null || node.getValue() < heap.getValue()) {
+                heap = node;
+            }
         }
     }
 
     /**
-     * Checks if the min is empty.
-     * @return true if the min is empty, false otherwise.
+     * Checks if the heap is empty.
+     * @return true if the heap is empty, false otherwise.
      */
     public boolean isEmpty() {
-        return min == null;
+        return getHeapSize() == 0;
     }
 
     /**
      * Empties the heap.
      */
     public void clear() {
-        min = null;
+        heap = null;
+        heapSize = 0;
     }
 
     /**
@@ -156,7 +182,7 @@ public class BinomialHeap implements Heap {
      * @param heap that is being merged.
      */
     public void merge(Node heap) {
-        Node tmp1 = min;
+        Node tmp1 = this.heap;
         Node tmp2 = heap;
         while ((tmp1 != null) && (tmp2 != null)) {
             if (tmp1.getDegree() == tmp2.getDegree()) {
@@ -181,21 +207,21 @@ public class BinomialHeap implements Heap {
                     tmp1 = tmp2;
                     tmp2 = tmp2.getSibling();
                     tmp1.setSibling(tmp);
-                    if (tmp == min) {
-                        min = tmp1;
+                    if (tmp == this.heap) {
+                        this.heap = tmp1;
                     }
                 }
             }
         }
         if (tmp1 == null) {
-            tmp1 = min;
+            tmp1 = this.heap;
             while (tmp1.getSibling() != null) {
                 tmp1 = tmp1.getSibling();
             }
             tmp1.setSibling(tmp2);
         }
-        Node tmp = min;
-        Node tmpNext = min.getSibling();
+        Node tmp = this.heap;
+        Node tmpNext = this.heap.getSibling();
         Node tmpPrev = null;
         while (tmpNext != null) {
             if ((tmp.getDegree() != tmpNext.getDegree()) || ((tmpNext.getSibling() != null)
@@ -211,7 +237,7 @@ public class BinomialHeap implements Heap {
                     tmp.setDegree(tmp.getDegree() + 1);
                 } else {
                     if (tmpPrev == null) {
-                        min = tmpNext;
+                        this.heap = tmpNext;
                     } else {
                         tmpPrev.setSibling(tmpNext);
                     }
@@ -224,28 +250,5 @@ public class BinomialHeap implements Heap {
             }
             tmpNext = tmp.getSibling();
         }
-    }
-
-    /**
-     * Finds the minimum amongst the roots of the binomial trees.
-     * @return minimum min.
-     */
-    public Node findMinRoot() {
-        Node x = min;
-        Node minRoot = min;
-        int minValue;
-        if (min != null) {
-            minValue = x.getValue();
-        } else {
-            minValue = Integer.MIN_VALUE;
-        }
-        while (x != null) {
-            if (x.getValue() < minValue) {
-                minRoot = x;
-                minValue = minRoot.getValue();
-            }
-            x = x.getSibling();
-        }
-        return minRoot;
     }
 }

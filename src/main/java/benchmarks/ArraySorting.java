@@ -3,6 +3,9 @@ package benchmarks;
 import datastructures.*;
 import java.util.Random;
 
+/**
+ * Class for benchmarking the array sorting capabilities of different heaps.
+ */
 public class ArraySorting {
 
     private int[] array;
@@ -31,7 +34,7 @@ public class ArraySorting {
             heap.insert(i);
         }
         for (int i = 0; i < array.length; i++){
-            sortedArray[i] = heap.findMinimum();
+            sortedArray[i] = heap.findMinValue();
             heap.deleteMin();
         }
         return sortedArray;

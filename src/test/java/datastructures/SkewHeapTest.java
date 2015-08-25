@@ -39,7 +39,7 @@ public class SkewHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin().getValue());
+        Assert.assertEquals(2, heap.findMinNode().getValue());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class SkewHeapTest {
         Assert.assertEquals(5, heap.deleteMin().getValue());
         anotherHeap.clear();
         anotherHeap.merge(heap);
-        Assert.assertEquals(7, anotherHeap.findMin().getValue());
+        Assert.assertEquals(7, anotherHeap.findMinNode().getValue());
     }
 
     @Test

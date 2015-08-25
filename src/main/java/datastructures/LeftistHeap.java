@@ -18,6 +18,10 @@ public class LeftistHeap implements Heap {
         root = null;
     }
 
+    public int getHeapSize() {
+        return 0;
+    }
+
     /**
      * Inserts a node into the heap by merging it
      * with existing tree.
@@ -31,11 +35,11 @@ public class LeftistHeap implements Heap {
     /**
      * Inserts a new node of value x into the heap
      * by merging it with the existing tree.
-     * @param x value of the node that is being added.
+     * @param value value of the node that is being added.
      */
     @Override
-    public void insert(int x) {
-        root = merge(new Node(x), root);
+    public void insert(int value) {
+        root = merge(new Node(value), root);
     }
 
     /**
@@ -43,7 +47,7 @@ public class LeftistHeap implements Heap {
      * @return the minimum node.
      */
     @Override
-    public Node findMin() {
+    public Node findMinNode() {
         return root;
     }
 
@@ -52,7 +56,7 @@ public class LeftistHeap implements Heap {
      * @return the value of minimum node as int.
      */
     @Override
-    public int findMinimum() {
+    public int findMinValue() {
         return root.getValue();
     }
 
@@ -78,17 +82,7 @@ public class LeftistHeap implements Heap {
      * @param newValue NOT IMPLEMENTED
      */
     @Override
-    public void decreaseKey(datastructures.Node node, int newValue) {
-        // NOT IMPLEMENTED
-    }
-
-    /**
-     * NOT IMPLEMENTED
-     * @param index NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
-     */
-    @Override
-    public void decreaseKey(int index, int newValue) {
+    public void decreaseKey(Node node, int newValue) {
         // NOT IMPLEMENTED
     }
 

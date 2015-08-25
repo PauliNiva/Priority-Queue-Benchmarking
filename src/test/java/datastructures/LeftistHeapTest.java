@@ -39,7 +39,7 @@ public class LeftistHeapTest {
         heap.insert(112);
         heap.insert(124);
         heap.insert(5);
-        Assert.assertEquals(2, heap.findMin().getValue());
+        Assert.assertEquals(2, heap.findMinNode().getValue());
     }
 
     @Test

@@ -28,24 +28,24 @@ public class DHeapTest {
 
     @Test
     public void findMinWorks() {
-        Assert.assertEquals(null, heap.findMin());
+        Assert.assertEquals(null, heap.findMinNode());
         heap.insert(1);
-        Assert.assertEquals(1, heap.findMin().getValue());
+        Assert.assertEquals(1, heap.findMinNode().getValue());
     }
 
     @Test
     public void insertAndHeapUpWorks() {
         DHeap heap = new DHeap(8, 2);
         heap.insert(4);
-        Assert.assertEquals(4, heap.findMin().getValue());
+        Assert.assertEquals(4, heap.findMinNode().getValue());
         heap.insert(5);
         heap.insert(2);
         heap.insert(6);
-        Assert.assertEquals(2, heap.findMin().getValue());
+        Assert.assertEquals(2, heap.findMinNode().getValue());
         heap.insert(3);
         heap.insert(7);
         heap.deleteMin();
-        Assert.assertEquals(3, heap.findMin().getValue());
+        Assert.assertEquals(3, heap.findMinNode().getValue());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class DHeapTest {
         heap.insert(8);
         heap.insert(2);
         heap.decreaseKey(3, 15);
-        Assert.assertEquals(2, heap.findMin().getValue());
+        Assert.assertEquals(2, heap.findMinNode().getValue());
         heap.decreaseKey(3, 1);
         Assert.assertEquals(1, heap.deleteMin().getValue());
     }
