@@ -89,7 +89,7 @@ public class Insert {
             insert(skewHeap);
             skew += (System.nanoTime() - startTime);
 
-            if (arraySize <= 30000) {
+            if (arraySize <= 10000) {
                 startTime = System.nanoTime();
                 insert(unaryHeap);
                 unary += (System.nanoTime() - startTime);

@@ -96,7 +96,7 @@ public class ArraySorting {
             sort(skewHeap);
             skew += (System.nanoTime() - startTime);
 
-            if (arraySize <= 30000) {
+            if (arraySize <= 10000) {
                 startTime = System.nanoTime();
                 sort(unaryHeap);
                 unary += (System.nanoTime() - startTime);

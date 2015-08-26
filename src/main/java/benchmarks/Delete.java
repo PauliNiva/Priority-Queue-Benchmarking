@@ -114,7 +114,7 @@ public class Delete {
             delete(skewHeap);
             skew += (System.nanoTime() - startTime);
 
-            if (arraySize <= 30000) {
+            if (arraySize <= 10000) {
                 startTime = System.nanoTime();
                 delete(unaryHeap);
                 unary += (System.nanoTime() - startTime);
