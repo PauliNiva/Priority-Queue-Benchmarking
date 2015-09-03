@@ -20,12 +20,16 @@ public class PairingHeap implements Heap {
     }
 
     /**
-     * NOT IMPLEMENTED
-     * @param node NOT IMPLEMENTED
+     * Inserts a new node into the heap.
+     * @param node node that is being inserted.
      */
     @Override
     public void insert(Node node) {
-        // NOT IMPLEMENTED
+        if (isEmpty()) {
+            root = node;
+        } else {
+            root = merge(root, node);
+        }
     }
 
     /**
@@ -80,13 +84,32 @@ public class PairingHeap implements Heap {
     }
 
     /**
-     * NOT IMPLEMENTED
-     * @param node NOT IMPLEMENTED
-     * @param newValue NOT IMPLEMENTED
+     * Method to decrease the value of a node.
+     * @param node whose value is being decreased.
+     * @param newValue the new value being inserted to a node.
      */
     @Override
     public void decreaseKey(Node node, int newValue) {
-        // NOT IMPLEMENTED
+        if (node == null ) {
+        } else {
+            Node tmp = node;
+            if (tmp.getValue() - newValue < 0) {
+            } else {
+                tmp.setValue(newValue);
+                if (tmp != root) {
+                    if (tmp.getNextSibling() != null) {
+                        tmp.getNextSibling().setPreviousSibling(tmp.getPreviousSibling());
+                    }
+                    if (tmp.getPreviousSibling().getLeftChild() == tmp) {
+                        tmp.getPreviousSibling().setLeftChild(tmp.getNextSibling());
+                    } else {
+                        tmp.getPreviousSibling().setNextSibling(tmp.getNextSibling());
+                    }
+                    tmp.setNextSibling(null);
+                    root = merge(root, tmp);
+                }
+            }
+        }
     }
 
     /**

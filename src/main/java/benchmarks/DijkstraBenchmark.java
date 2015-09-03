@@ -20,6 +20,7 @@ public class DijkstraBenchmark {
         long quaternary = 0;
         long binomial = 0;
         long fibonacci = 0;
+        long pairing = 0;
 
         BinaryHeap binaryHeap = new BinaryHeap(size);
         BinomialHeap binomialHeap = new BinomialHeap();
@@ -28,6 +29,7 @@ public class DijkstraBenchmark {
         DHeap binaryHeapD = new DHeap(size, 2);
         DHeap ternaryHeap = new DHeap(size, 3);
         DHeap quaternaryHeap = new DHeap(size, 4);
+        PairingHeap pairingHeap = new PairingHeap();
 
         for (int i = 0; i < 10; i++) {
             Dijkstra dijkstra = new Dijkstra(createGraph(size), createMatrix(size),0);
@@ -62,6 +64,9 @@ public class DijkstraBenchmark {
             dijkstra.findShortestPaths(quaternaryHeap);
             quaternary += (System.nanoTime() - startTime);
 
+            startTime = System.nanoTime();
+            dijkstra.findShortestPaths(pairingHeap);
+            pairing += (System.nanoTime() - startTime);
         }
 
         binary /= 10 * 1000000;
@@ -71,6 +76,7 @@ public class DijkstraBenchmark {
         binaryD /= 10 * 1000000;
         ternary /= 10 * 1000000;
         quaternary /= 10 * 1000000;
+        pairing /= 10 * 1000000;
 
         System.out.println("Average time for finding shortest paths \nwhen the size of the graph was " + size + ":\n");
         System.out.println("Binary heap: " + binary + " ms.");
@@ -84,6 +90,7 @@ public class DijkstraBenchmark {
         System.out.println("BinaryD heap: " + binaryD + " ms.");
         System.out.println("Ternary heap: " + ternary + " ms.");
         System.out.println("Quaternary heap: " + quaternary + " ms.");
+        System.out.println("Pairing heap: " + pairing + " ms.");
         System.out.println();
         System.out.println();
     }

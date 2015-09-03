@@ -9,6 +9,7 @@ public class Main {
         Insert insert = new Insert();
         Delete delete = new Delete();
         DijkstraBenchmark dijkstra = new DijkstraBenchmark();
+        /*
         insert.insertBenchmark(1000);
         insert.insertBenchmark(10000);
         insert.insertBenchmark(30000);
@@ -23,6 +24,7 @@ public class Main {
         arraySorting.arraySortingBenchmark(30000);
         arraySorting.arraySortingBenchmark(100000);
         arraySorting.arraySortingBenchmark(1000000);
+        */
         dijkstra.benchmark(100);
         dijkstra.benchmark(1000);
         dijkstra.benchmark(5000);

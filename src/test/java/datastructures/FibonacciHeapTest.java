@@ -240,28 +240,20 @@ public class FibonacciHeapTest {
     }
 
     @Test
-    public void test_InsertRemoveMin() {
-        // This is a stress test that inserts numerous random elements and
-        // ensures that they come out in increasing order by value. This
-        // extreme case uncovered multiple bugs in nearly every public
-        // implementation of fibonacci heap.
+    public void InsertRemoveMinStressTest() {
         FibonacciHeap heap = new FibonacciHeap();
         Assert.assertTrue(heap.isEmpty());
         Assert.assertEquals(0, heap.getHeapSize());
-        // Insert a known minimum value.
         heap.insert(1);
-        // Insert a lot of random numbers.
         Random random = new Random();
         for (int ii = 1; ii <= 49999; ii++) {
             int r = random.nextInt();
             if (r < 0) {
-                // Insure only positive values are stored.
                 r += Integer.MAX_VALUE;
             }
             heap.insert(r);
         }
         Assert.assertEquals(50000, heap.getHeapSize());
-        // Ensure the numbers come out in increasing order.
         int ii = 1;
         int count = 0;
         while (!heap.isEmpty()) {
@@ -272,7 +264,6 @@ public class FibonacciHeapTest {
             Assert.assertTrue(vi >= ii);
             ii = vi;
         }
-        // Ensure no elements were lost on the way out.
         Assert.assertEquals(50000, count);
         Assert.assertTrue(heap.isEmpty());
         Assert.assertEquals(0, heap.getHeapSize());

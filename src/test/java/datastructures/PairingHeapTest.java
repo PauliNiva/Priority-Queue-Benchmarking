@@ -100,4 +100,29 @@ public class PairingHeapTest {
         heap.mergePairs(y);
         heap.clear();
     }
+
+    @Test
+    public void decreaseKeyWorks() {
+        Node node1 = new Node(13);
+        Node node2 = new Node(34);
+        Node node3 = new Node(14);
+        Node node4= new Node(124);
+        Node node5 = new Node(18);
+        heap.insert(node5);
+        Assert.assertEquals(18, heap.findMinNode().getValue());
+        heap.decreaseKey(node5, 17);
+        Assert.assertEquals(17, heap.findMinNode().getValue());
+        heap.insert(node2);
+        heap.insert(node1);
+        Assert.assertEquals(13, heap.findMinNode().getValue());
+        heap.decreaseKey(node5, 12);
+        Assert.assertEquals(12, heap.findMinNode().getValue());
+        heap.insert(node4);
+        heap.insert(node3);
+        heap.decreaseKey(node4, 10);
+        Assert.assertEquals(10, heap.findMinNode().getValue());
+        heap.decreaseKey(node5, 11);
+        heap.decreaseKey(node5, 17);
+        heap.decreaseKey(node5, 9);
+    }
 }
