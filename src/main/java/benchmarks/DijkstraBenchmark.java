@@ -43,7 +43,7 @@ public class DijkstraBenchmark {
             binomial += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
-            //dijkstra.findShortestPaths(fibonacciHeap);
+            dijkstra.findShortestPaths(fibonacciHeap);
             fibonacci += (System.nanoTime() - startTime);
 
             if (size <= 0) {
@@ -81,7 +81,7 @@ public class DijkstraBenchmark {
         System.out.println("Average time for finding shortest paths \nwhen the size of the graph was " + size + ":\n");
         System.out.println("Binary heap: " + binary + " ms.");
         //System.out.println("Binomial heap: " + binomial + " ms.");
-        //System.out.println("Fibonacci heap: " + fibonacci + " ms.");
+        System.out.println("Fibonacci heap: " + fibonacci + " ms.");
         if (size <= 100) {
             System.out.println("Unary heap: " + unary + " ms.");
         } else {
@@ -106,7 +106,12 @@ public class DijkstraBenchmark {
     private static int[] createRandomArray(int size) {
         int[] array = new int[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new Random().nextInt(100000 - 1) + 1;
+            int noEgde = new Random().nextInt(7 - 1) + 1;
+            if (noEgde == 5) {
+                array[i] = 0;
+            } else {
+                array[i] = new Random().nextInt(100000 - 1) + 1;
+            }
         }
         return array;
     }

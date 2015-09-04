@@ -13,13 +13,10 @@ public class FibonacciHeap implements Heap {
     private int heapSize;
 
     /**
-     * Initializes a new empty Fibonacci heap.
+     * Gets the size of the heap.
+     * @return size of the heap as int.
      */
-    public FibonacciHeap() {
-        min = null;
-        heapSize = 0;
-    }
-
+    @Override
     public int getHeapSize() {
         return heapSize;
     }
@@ -30,17 +27,16 @@ public class FibonacciHeap implements Heap {
      */
     @Override
     public void insert(Node node) {
-        if (isEmpty()) {
-            min = node;
-        } else {
-            int value = node.getValue();
-            node.setRight(min);
-            node.setLeft(min.getLeft());
-            min.setLeft(node);
-            node.getLeft().setRight(node);
-            if (value < min.getValue()) {
+        if (min != null) {
+            node.right = min;
+            node.left = min.left;
+            min.left = node;
+            node.left.right = node;
+            if (node.value < min.value) {
                 min = node;
             }
+        } else {
+            min = node;
         }
         heapSize++;
     }
@@ -51,8 +47,20 @@ public class FibonacciHeap implements Heap {
      */
     @Override
     public void insert(int value) {
-        Node node = new Node(value);
-        insert(node);
+        int x = value;
+        Node node = new Node(x, value, value);
+        if (min != null) {
+            node.right = min;
+            node.left = min.left;
+            min.left = node;
+            node.left.right = node;
+            if (value < min.value) {
+                min = node;
+            }
+        } else {
+            min = node;
+        }
+        heapSize++;
     }
 
     /**
@@ -61,9 +69,6 @@ public class FibonacciHeap implements Heap {
      */
     @Override
     public Node findMinNode() {
-        if (heapSize == 0){
-            return null;
-        }
         return min;
     }
 
@@ -73,7 +78,7 @@ public class FibonacciHeap implements Heap {
      */
     @Override
     public int findMinValue() {
-        return min.getValue();
+        return min.value;
     }
 
     /**
@@ -84,37 +89,31 @@ public class FibonacciHeap implements Heap {
     @Override
     public Node deleteMin() {
         Node tmp = min;
-        if (isEmpty()) {
+        if (tmp == null) {
             return null;
-        } else {
-            if (tmp.getChild() != null) {
-                tmp.getChild().setParent(null);
-                Node loopPreventer = tmp.getChild().getRight();
-                for (Node node = tmp.getChild().getRight(); node != tmp.getChild(); node = node.getRight()) {
-                    if (loopPreventer.equals(node)) {
-                        break;
-                    } else {
-                        node.setParent(null);
-                    }
-                }
-                Node minLeft = min.getLeft();
-                Node tmpChildLeft = tmp.getChild().getLeft();
-                min.setLeft(tmpChildLeft);
-                tmpChildLeft.setRight(min);
-                tmp.getChild().setLeft(minLeft);
-                minLeft.setRight(tmp.getChild());
-            }
-            tmp.getLeft().setRight(tmp.getRight());
-            tmp.getRight().setLeft(tmp.getLeft());
-            if (tmp == tmp.getRight()) {
-                min = null;
-            } else {
-                min = tmp.getRight();
-                consolidateTrees();
-            }
-            heapSize--;
-            return tmp;
         }
+        if (tmp.child != null) {
+            tmp.child.parent = null;
+            for (Node x = tmp.child.right; x != tmp.child; x = x.right) {
+                x.parent = null;
+            }
+            Node minLeft = min.left;
+            Node tmpChildLeft = tmp.child.left;
+            min.left = tmpChildLeft;
+            tmpChildLeft.right = min;
+            tmp.child.left = minLeft;
+            minLeft.right = tmp.child;
+        }
+        tmp.left.right = tmp.right;
+        tmp.right.left = tmp.left;
+        if (tmp == tmp.right) {
+            min = null;
+        } else {
+            min = tmp.right;
+            consolidate();
+        }
+        heapSize--;
+        return tmp;
     }
 
     /**
@@ -123,14 +122,28 @@ public class FibonacciHeap implements Heap {
      * @param newValue the new value being inserted to a node.
      */
     public void decreaseKey(Node node, int newValue) {
-        node.setValue(newValue);
-        Node parent = node.getParent();
-        if ((parent != null) && (node.getValue() < parent.getValue())) {
-            cut(node, parent);
-            cascadeCut(parent);
-        }
-        if (min == null || node.getValue() < min.getValue()) {
-            min = node;
+        decreaseKey(node, newValue, false);
+    }
+
+    /**
+     * Decrease the key value of a node, or bubble it up to the
+     * top of the heap for a delete operation.
+     * @param node node whose key is being decreased.
+     * @param newValue new key value for the node.
+     * @param delete true if deleting node, false otherwise.
+     */
+    private void decreaseKey(Node node, int newValue, boolean delete) {
+        if (!delete && newValue > node.value) {
+        } else {
+            node.value = newValue;
+            Node tmp = node.parent;
+            if (tmp != null && (delete || newValue < tmp.value)) {
+                tmp.cut(node, min);
+                tmp.cascadingCut(min);
+            }
+            if (delete || newValue < min.value) {
+                min = node;
+            }
         }
     }
 
@@ -147,6 +160,7 @@ public class FibonacciHeap implements Heap {
      */
     public void clear() {
         min = null;
+        heapSize = 0;
     }
 
     /**
@@ -155,50 +169,51 @@ public class FibonacciHeap implements Heap {
      * @param heap2 heap to be merged.
      * @return new heap where the two old ones are merged.
      */
-    public FibonacciHeap merge(FibonacciHeap heap1, FibonacciHeap heap2) {
-        FibonacciHeap mergedHeap = new FibonacciHeap();
+    public static FibonacciHeap merge(FibonacciHeap heap1, FibonacciHeap heap2) {
+        FibonacciHeap newHeap = new FibonacciHeap();
         if (heap1 != null && heap2 != null) {
-            mergedHeap.min = heap1.min;
-            if (mergedHeap.min != null) {
+            newHeap.min = heap1.min;
+            if (newHeap.min != null) {
                 if (heap2.min != null) {
-                    mergedHeap.min.getRight().setLeft(heap2.min.getLeft());
-                    heap2.min.getLeft().setRight(mergedHeap.min.getRight());
-                    mergedHeap.min.setRight(heap2.min);
-                    heap2.min.setLeft(mergedHeap.min);
-                    if (heap2.min.getValue() < heap1.min.getValue()) {
-                        mergedHeap.min = heap2.min;
+                    newHeap.min.right.left = heap2.min.left;
+                    heap2.min.left.right = newHeap.min.right;
+                    newHeap.min.right = heap2.min;
+                    heap2.min.left = newHeap.min;
+                    if (heap2.min.value < heap1.min.value) {
+                        newHeap.min = heap2.min;
                     }
                 }
             } else {
-                mergedHeap.min = heap2.min;
+                newHeap.min = heap2.min;
             }
+            newHeap.heapSize = heap1.heapSize + heap2.heapSize;
         }
-        return mergedHeap;
+        return newHeap;
     }
 
     /**
      * Consolidates the trees in the heap by joining trees of equal degree.
      */
-    public void consolidateTrees() {
+    private void consolidate() {
         Node[] degreeArray = new Node[45];
         Node start = min;
         Node tmp = min;
         do {
             Node tmp1 = tmp;
-            Node tmpNext = tmp.getRight();
-            int degree = tmp1.getDegree();
+            Node tmpNext = tmp.right;
+            int degree = tmp1.degree;
             while (degreeArray[degree] != null) {
                 Node tmp2 = degreeArray[degree];
-                if (tmp1.getValue() > tmp2.getValue()) {
+                if (tmp1.value > tmp2.value) {
                     Node tmp3 = tmp2;
                     tmp2 = tmp1;
                     tmp1 = tmp3;
                 }
                 if (tmp2 == start) {
-                    start = start.getRight();
+                    start = start.right;
                 }
                 if (tmp2 == tmpNext) {
-                    tmpNext = tmpNext.getRight();
+                    tmpNext = tmpNext.right;
                 }
                 tmp2.link(tmp1);
                 degreeArray[degree] = null;
@@ -208,52 +223,19 @@ public class FibonacciHeap implements Heap {
             tmp = tmpNext;
         } while (tmp != start);
         min = start;
-        for (Node node : degreeArray) {
-            if (node != null && node.getValue() < min.getValue()) {
-                min = node;
+        for (Node a : degreeArray) {
+            if (a != null && a.value < min.value) {
+                min = a;
             }
         }
     }
 
     /**
-     * Method that cuts the node and puts it in root list.
-     * @param node that is being removed.
-     * @param parent parent node of the node.
+     * Deletes a node from the heap.
+     * @param node node that is being removed from heap.
      */
-    public void cut(Node node, Node parent) {
-        node.getLeft().setRight(node.getRight());
-        node.getRight().setLeft(node.getLeft());
-        parent.setDegree(parent.getDegree() + 1);
-        if (parent.getChild() == node) {
-            parent.setChild(node.getRight());
-        }
-        if (parent.getDegree() == 0) {
-            parent.setChild(null);
-        }
-        node.setLeft(min);
-        node.setRight(min.getRight());
-        min.setRight(node);
-        node.getRight().setLeft(node);
-        node.setParent(null);
-        node.decolor();
-    }
-
-    /**
-     * Method that travels the tree upwards cutting all the
-     * nodes that are colored and adds them to root list.
-     * Stops at the first uncolored node ands colors it.
-     * @param node where the cutting begins.
-     */
-    public void cascadeCut(Node node) {
-        Node parent = node.getParent();
-        if (parent != null) {
-            if (!node.getColored()) {
-                node.color();
-            } else {
-                cut(node, parent);
-                cascadeCut(parent);
-            }
-        }
+    public void delete(Node node) {
+        decreaseKey(node, 0, true);
+        deleteMin();
     }
 }
-

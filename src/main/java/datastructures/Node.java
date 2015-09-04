@@ -11,20 +11,21 @@ import java.util.Random;
 public class Node {
 
     private int dijkstraPriority;
-    private int value;
+    public int value;
     private int sValue;
-    private int degree;
+    public int degree;
     private int priority;
-    private Node parent;
-    private Node left;
-    private Node right;
-    private Node child;
+    public Node parent;
+    public Node left;
+    public Node right;
+    public Node child;
     private Node sibling;
     private Node leftChild;
     private Node rightChild;
     private Node nextSibling;
     private Node previousSibling;
     private boolean colored;
+    public boolean mark;
     private int index;
 
     /**
@@ -45,6 +46,20 @@ public class Node {
         previousSibling = null;
         priority = new Random().nextInt();
         colored = false;
+    }
+
+    /**
+     * Initializes a new fibonacci heap node.
+     * @param x Dijkstra priority of the new node.
+     * @param y value of the new node.
+     * @param i mock parameter to differentiate the fibonacci node from
+     *          new Dijkstra priority.
+     */
+    public Node(int x, int y, int i) {
+        dijkstraPriority = x;
+        value = y;
+        right = this;
+        left = this;
     }
 
     /**
@@ -75,8 +90,49 @@ public class Node {
     }
 
     /**
-     * This method turns caller dijkstraPriority to child dijkstraPriority of the parameter dijkstraPriority.
-     * @param parent dijkstraPriority that is being linked as parent.
+     * Cuts this from its parent and then does the same for its parent
+     * and continues all the way to the top of the tree in same manner.
+     * @param min heaps minimum node, to which other nodes will be added.
+     */
+    public void cascadingCut(Node min) {
+        Node tmp = parent;
+        if (tmp != null) {
+            if (mark) {
+                tmp.cut(this, min);
+                tmp.cascadingCut(min);
+            } else {
+                mark = true;
+            }
+        }
+    }
+
+    /**
+     * Removes the node from the child list of this node.
+     * @param node child to be removed from this node's child list
+     * @param min the minimum heap node, to which x is added.
+     */
+    public void cut(Node node, Node min) {
+        node.left.right = node.right;
+        node.right.left = node.left;
+        degree--;
+        if (degree == 0) {
+            child = null;
+        } else if (child == node) {
+            child = node.right;
+        }
+        node.right = min;
+        node.left = min.left;
+        min.left = node;
+        node.left.right = node;
+        node.parent = null;
+        node.mark = false;
+    }
+
+    /**
+     * Make this node a child of the given parent node. All links
+     * are updated, parents degree is incremented and
+     * mark is set to false.
+     * @param  parent  the new parent node.
      */
     public void link(Node parent) {
         left.right = right;
@@ -93,6 +149,7 @@ public class Node {
             right.left = this;
         }
         parent.degree++;
+        mark = false;
     }
 
     /**
