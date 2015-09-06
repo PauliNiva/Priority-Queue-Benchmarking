@@ -8,16 +8,22 @@ package datastructures;
  */
 public class BinomialHeap implements Heap {
 
-    private Node heap;
-    int heapSize;
+    private Node head;
+    private int heapSize;
 
     /**
      * Initializes a new empty binomial heap.
      */
     public BinomialHeap() {
-        heap = null;
+        head = null;
+        heapSize = 0;
     }
 
+    /**
+     * Gets the size of the heap.
+     * @return the number of elements in the heap.
+     */
+    @Override
     public int getHeapSize() {
         return heapSize;
     }
@@ -29,13 +35,11 @@ public class BinomialHeap implements Heap {
      */
     @Override
     public void insert(Node node) {
-        if (isEmpty()) {
-            heap = node;
-            heapSize++;
-        } else {
-            merge(node);
-            heapSize++;
-        }
+        BinomialHeap heap = new BinomialHeap();
+        heap.head = node;
+        BinomialHeap newHeap = this.merge(heap);
+        head = newHeap.head;
+        heapSize++;
     }
 
     /**
@@ -45,37 +49,32 @@ public class BinomialHeap implements Heap {
      */
     @Override
     public void insert(int value) {
+        BinomialHeap heap = new BinomialHeap();
         Node node = new Node(value);
-        if (isEmpty()) {
-            heap = node;
-            heapSize++;
-        } else {
-            merge(node);
-            heapSize++;
-        }
+        heap.head = node;
+        BinomialHeap newHeap = this.merge(heap);
+        head = newHeap.head;
+        heapSize++;
     }
 
     /**
      * Finds the minimum amongst the roots of the binomial trees.
      * @return minimum heap.
      */
+    @Override
     public Node findMinNode() {
-        Node tmp = heap;
-        Node minRoot = heap;
-        int minValue;
-        if (heap != null) {
-            minValue = tmp.getValue();
-        } else {
-            minValue = Integer.MAX_VALUE;
+        if (head == null) {
+            return null;
         }
-        while (tmp != null) {
-            if (tmp.getValue() < minValue) {
-                minRoot = tmp;
-                minValue = minRoot.getValue();
+        Node tmp = head;
+        Node tmp1 = tmp.sibling;
+        while (tmp1 != null) {
+            if (tmp1.value < tmp.value) {
+                tmp = tmp1;
             }
-            tmp = tmp.getSibling();
+            tmp1 = tmp1.sibling;
         }
-        return minRoot;
+        return tmp;
     }
 
     /**
@@ -84,11 +83,7 @@ public class BinomialHeap implements Heap {
      */
     @Override
     public int findMinValue() {
-        if (findMinNode() != null) {
-            return findMinNode().getValue();
-        } else {
-            return Integer.MAX_VALUE;
-        }
+        return findMinNode().value;
     }
 
     /**
@@ -97,43 +92,38 @@ public class BinomialHeap implements Heap {
      */
     @Override
     public Node deleteMin() {
-        if (isEmpty()) {
+        if (head == null) {
             return null;
-        } else {
-            Node minRoot = findMinNode();
-            Node tmp = heap;
-            Node tmpPrev = null;
-            if (minRoot != null || tmp != null) {
-                while (minRoot.getValue() != tmp.getValue()) {
-                    tmpPrev = tmp;
-                    tmp = tmp.getSibling();
-                }
-                if (tmpPrev == null) {
-                    heap = tmp.getSibling();
-                } else {
-                    tmpPrev.setSibling(tmp.getSibling());
-                }
-                tmp = tmp.getChild();
-            }
-            Node tmpOriginal = tmp;
-            while (tmp != null) {
-                tmp.setParent(null);
-                tmp = tmp.getSibling();
-            }
-            if ((heap == null) && (tmpOriginal == null)) {
-            } else {
-                if (tmpOriginal == null) {
-                } else {
-                    if (heap == null) {
-                        heap = tmpOriginal.reverseRootList(null);
-                    } else {
-                        merge(tmpOriginal.reverseRootList(null));
-                    }
-                }
-            }
-            heapSize--;
-            return minRoot;
         }
+        Node tmp = head;
+        Node tmp1 = tmp.sibling;
+        Node tmp1Predecessor = tmp;
+        Node tmpPredecessor = null;
+        while (tmp1 != null) {
+            if (tmp1.value < tmp.value) {
+                tmp = tmp1;
+                tmpPredecessor = tmp1Predecessor;
+            }
+            tmp1Predecessor = tmp1;
+            tmp1 = tmp1.sibling;
+        }
+        if (tmp == head) {
+            head = tmp.sibling;
+        } else {
+            tmpPredecessor.sibling = tmp.sibling;
+        }
+        BinomialHeap heap = new BinomialHeap();
+        Node node = tmp.child;
+        while (node != null) {
+            Node next = node.sibling;
+            node.sibling = heap.head;
+            heap.head = node;
+            node = next;
+        }
+        BinomialHeap newHeap = this.merge(heap);
+        head = newHeap.head;
+        heapSize--;
+        return tmp;
     }
 
     /**
@@ -144,19 +134,19 @@ public class BinomialHeap implements Heap {
      */
     @Override
     public void decreaseKey(Node node, int newValue) {
-        if (node.getValue() > newValue) {
-            node.setValue(newValue);
-            while (node.getParent() != null && node.getParent().getValue() > newValue) {
-                int value = node.getValue();
-                int dijkstraPriority = node.getDijkstraPriority();
-                node.setValue(node.getParent().getValue());
-                node.setDijkstraPriority(node.getParent().getDijkstraPriority());
-                node.getParent().setValue(value);
-                node.getParent().setDijkstraPriority(dijkstraPriority);
-                node = node.getParent();
-            }
-            if (heap == null || node.getValue() < heap.getValue()) {
-                heap = node;
+        if (node.value > newValue && newValue > 0) {
+            node.value = newValue;
+            Node tmp = node;
+            Node tmp1 = tmp.parent;
+            while (tmp1 != null && (tmp.value < tmp1.value )) {
+                int i = tmp.value;
+                tmp.value = tmp1.value;
+                tmp1.value = i;
+                i = tmp.dijkstraPriority;
+                tmp.dijkstraPriority = tmp1.dijkstraPriority;
+                tmp1.dijkstraPriority = i;
+                tmp = tmp1;
+                tmp1 = tmp.parent;
             }
         }
     }
@@ -165,7 +155,7 @@ public class BinomialHeap implements Heap {
      * Checks if the heap is empty.
      * @return true if the heap is empty, false otherwise.
      */
-    public boolean isEmpty() {
+    public boolean isEmpty(){
         return getHeapSize() == 0;
     }
 
@@ -173,82 +163,102 @@ public class BinomialHeap implements Heap {
      * Empties the heap.
      */
     public void clear() {
-        heap = null;
+        head = null;
         heapSize = 0;
     }
 
     /**
      * Method to merge two heaps.
      * @param heap that is being merged.
+     * @return new merged heap.
      */
-    public void merge(Node heap) {
-        Node tmp1 = this.heap;
-        Node tmp2 = heap;
-        while ((tmp1 != null) && (tmp2 != null)) {
-            if (tmp1.getDegree() == tmp2.getDegree()) {
-                Node tmp = tmp2;
-                tmp2 = tmp2.getSibling();
-                tmp.setSibling(tmp1.getSibling());
-                tmp1.setSibling(tmp);
-                tmp1 = tmp.getSibling();
-            } else {
-                if (tmp1.getDegree() < tmp2.getDegree()) {
-                    if ((tmp1.getSibling() == null) || (tmp1.getSibling().getDegree() > tmp2.getDegree())) {
-                        Node tmp = tmp2;
-                        tmp2 = tmp2.getSibling();
-                        tmp.setSibling(tmp1.getSibling());
-                        tmp1.setSibling(tmp);
-                        tmp1 = tmp.getSibling();
-                    } else {
-                        tmp1 = tmp1.getSibling();
-                    }
-                } else {
-                    Node tmp = tmp1;
-                    tmp1 = tmp2;
-                    tmp2 = tmp2.getSibling();
-                    tmp1.setSibling(tmp);
-                    if (tmp == this.heap) {
-                        this.heap = tmp1;
-                    }
-                }
-            }
+    public BinomialHeap merge(BinomialHeap heap) {
+        BinomialHeap newHeap = new BinomialHeap();
+        newHeap.head = mergeRootLists(this, heap);
+        head = null;
+        heap.head = null;
+        if (newHeap.head == null) {
+            return newHeap;
         }
-        if (tmp1 == null) {
-            tmp1 = this.heap;
-            while (tmp1.getSibling() != null) {
-                tmp1 = tmp1.getSibling();
-            }
-            tmp1.setSibling(tmp2);
-        }
-        Node tmp = this.heap;
-        Node tmpNext = this.heap.getSibling();
-        Node tmpPrev = null;
+        Node tmpPredecessor = null;
+        Node tmp = newHeap.head;
+        Node tmpNext = tmp.sibling;
         while (tmpNext != null) {
-            if ((tmp.getDegree() != tmpNext.getDegree()) || ((tmpNext.getSibling() != null)
-                    && (tmpNext.getSibling().getDegree() == tmp.getDegree()))) {
-                tmpPrev = tmp;
+            if (tmp.degree != tmpNext.degree || (tmpNext.sibling != null && tmpNext.sibling.degree == tmp.degree)) {
+                tmpPredecessor = tmp;
                 tmp = tmpNext;
             } else {
-                if (tmp.getValue() <= tmpNext.getValue()) {
-                    tmp.setSibling(tmpNext.getSibling());
-                    tmpNext.setParent(tmp);
-                    tmpNext.setSibling(tmp.getChild());
-                    tmp.setChild(tmpNext);
-                    tmp.setDegree(tmp.getDegree() + 1);
+                if (tmp.value < tmpNext.value) {
+                    tmp.sibling = tmpNext.sibling;
+                    pair(tmpNext, tmp);
                 } else {
-                    if (tmpPrev == null) {
-                        this.heap = tmpNext;
-                    } else {
-                        tmpPrev.setSibling(tmpNext);
+                    if (tmpPredecessor == null) {
+                        newHeap.head = tmpNext;
+                    } else{
+                        tmpPredecessor.sibling = tmpNext;
                     }
-                    tmp.setParent(tmpNext);
-                    tmp.setSibling(tmpNext.getChild());
-                    tmpNext.setChild(tmp);
-                    tmpNext.setDegree(tmpNext.getDegree() + 1);
+                    pair(tmp, tmpNext);
                     tmp = tmpNext;
                 }
             }
-            tmpNext = tmp.getSibling();
+            tmpNext = tmp.sibling;
+        }
+        return newHeap;
+    }
+
+    /**
+     * Pair binomial trees.
+     * @param x root of one binomial tree which will be parent.
+     * @param y root of another binomial tree which will be child;
+     */
+    private void pair(Node x, Node y) {
+        x.parent = y;
+        x.sibling = y.child;
+        y.child = x;
+        y.degree++;
+    }
+
+    /**
+     * Merges the root lists with head of the trees from heap1 and heap2
+     * @param heap1 one heap that is being merged.
+     * @param heap2 other heap that is being merged.
+     * @return the head of the merged root list.
+     */
+    private Node mergeRootLists(BinomialHeap heap1, BinomialHeap heap2) {
+        if (heap1.head == null) {
+            return heap2.head;
+        }
+        else if (heap2.head == null) {
+            return heap1.head;
+        } else {
+            Node head;
+            Node tail;
+            Node heap1Next = heap1.head;
+            Node heap2Next = heap2.head;
+            if (heap1.head.degree <= heap2.head.degree) {
+                head = heap1.head;
+                heap1Next = heap1Next.sibling;
+            } else {
+                head = heap2.head;
+                heap2Next = heap2Next.sibling;
+            }
+            tail = head;
+            while (heap1Next != null && heap2Next != null) {
+                if (heap1Next.degree <= heap2Next.degree) {
+                    tail.sibling = heap1Next;
+                    heap1Next = heap1Next.sibling;
+                } else {
+                    tail.sibling = heap2Next;
+                    heap2Next = heap2Next.sibling;
+                }
+                tail = tail.sibling;
+            }
+            if (heap1Next != null) {
+                tail.sibling = heap1Next;
+            } else {
+                tail.sibling = heap2Next;
+            }
+            return head;
         }
     }
 }

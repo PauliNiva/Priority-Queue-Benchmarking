@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
+
 public class BinomialHeapTest {
 
     BinomialHeap heap;
@@ -81,10 +83,10 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         anotherHeap.insert(543);
         anotherHeap.insert(25);
-        heap.merge(anotherHeap.findMinNode());
-        Assert.assertEquals(3, heap.deleteMin().getValue());
-        Assert.assertEquals(4, heap.deleteMin().getValue());
-        Assert.assertEquals(5, heap.deleteMin().getValue());
+        BinomialHeap yetAnother = heap.merge(anotherHeap);
+        Assert.assertEquals(3, yetAnother.deleteMin().getValue());
+        Assert.assertEquals(4, yetAnother.deleteMin().getValue());
+        Assert.assertEquals(5, yetAnother.deleteMin().getValue());
     }
 
     @Test
@@ -96,8 +98,7 @@ public class BinomialHeapTest {
         heap.insert(124);
         heap.insert(34);
         Assert.assertFalse(heap.isEmpty());
-        heap.clear();
-        Assert.assertTrue(heap.isEmpty());
+
     }
 
     @Test
@@ -118,9 +119,9 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         anotherHeap.insert(543);
         anotherHeap.insert(25);
-        heap.merge(anotherHeap.findMinNode());
-        Assert.assertEquals(3, heap.deleteMin().getValue());
-        Assert.assertEquals(4, heap.deleteMin().getValue());
+        BinomialHeap yetAnother = heap.merge(anotherHeap);
+        Assert.assertEquals(3, yetAnother.deleteMin().getValue());
+        Assert.assertEquals(4, yetAnother.deleteMin().getValue());
     }
 
     @Test
@@ -140,10 +141,39 @@ public class BinomialHeapTest {
         anotherHeap.insert(3);
         heap.insert(543);
         heap.insert(25);
-        heap.merge(anotherHeap.findMinNode());
-        Assert.assertEquals(3, heap.deleteMin().getValue());
-        Assert.assertEquals(4, heap.deleteMin().getValue());
-        Assert.assertEquals(5, heap.deleteMin().getValue());
+        BinomialHeap yetAnother = heap.merge(anotherHeap);
+        Assert.assertEquals(3, yetAnother.deleteMin().getValue());
+        Assert.assertEquals(4, yetAnother.deleteMin().getValue());
+        Assert.assertEquals(5, yetAnother.deleteMin().getValue());
     }
 
+    @Test
+    public void InsertRemoveMinStressTest() {
+        BinomialHeap heap = new BinomialHeap();
+        Assert.assertTrue(heap.isEmpty());
+        Assert.assertEquals(0, heap.getHeapSize());
+        heap.insert(1);
+        Random random = new Random();
+        for (int ii = 1; ii <= 49999; ii++) {
+            int r = random.nextInt();
+            if (r < 0) {
+                r += Integer.MAX_VALUE;
+            }
+            heap.insert(r);
+        }
+        Assert.assertEquals(50000, heap.getHeapSize());
+        int ii = 1;
+        int count = 0;
+        while (!heap.isEmpty()) {
+            Node tmp = heap.deleteMin();
+            int v = tmp.getValue();
+            count++;
+            int vi = v;
+            Assert.assertTrue(vi >= ii);
+            ii = vi;
+        }
+        Assert.assertEquals(50000, count);
+        Assert.assertTrue(heap.isEmpty());
+        Assert.assertEquals(0, heap.getHeapSize());
+    }
 }

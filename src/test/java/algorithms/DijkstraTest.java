@@ -88,6 +88,7 @@ public class DijkstraTest {
         Assert.assertTrue(distances[4] == 20);
         Assert.assertTrue(distances[5] == 11);
     }
+
     @Test
     public void distancesWithBinomialHeapTest2(){
         int[] distances = dijkstra2.findShortestPaths(binomialHeap);

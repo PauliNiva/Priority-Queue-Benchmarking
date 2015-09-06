@@ -10,23 +10,23 @@ import java.util.Random;
  */
 public class Node {
 
-    private int dijkstraPriority;
+    public int dijkstraPriority;
     public int value;
-    private int sValue;
+    public int sValue;
     public int degree;
-    private int priority;
+    public int priority;
     public Node parent;
     public Node left;
     public Node right;
     public Node child;
-    private Node sibling;
-    private Node leftChild;
-    private Node rightChild;
-    private Node nextSibling;
-    private Node previousSibling;
-    private boolean colored;
+    public Node sibling;
+    public Node leftChild;
+    public Node rightChild;
+    public Node nextSibling;
+    public Node previousSibling;
+    public boolean colored;
     public boolean mark;
-    private int index;
+    public int index;
 
     /**
      * Initializes a new dijkstraPriority with value x.
@@ -150,23 +150,6 @@ public class Node {
         }
         parent.degree++;
         mark = false;
-    }
-
-    /**
-     * This is an auxiliary method for deleteMin method.
-     * It reverses the root list.
-     * @param tmp the min dijkstraPriority of the root list to be reversed.
-     * @return the min of the reversed root list.
-     */
-    public Node reverseRootList(Node tmp) {
-        Node newHead;
-        if (sibling != null) {
-            newHead = sibling.reverseRootList(this);
-        } else {
-            newHead = this;
-        }
-        sibling = tmp;
-        return newHead;
     }
 
     public int getIndex(){
@@ -399,28 +382,5 @@ public class Node {
      */
     public void setPreviousSibling(Node node) {
         previousSibling = node;
-    }
-
-    /**
-     * Gets the boolean value if the dijkstraPriority is colored
-     * or not.
-     * @return true, if dijkstraPriority is colored, false otherwise.
-     */
-    public boolean getColored() {
-        return colored;
-    }
-
-    /**
-     * Method that sets the colored value to true;
-     */
-    public void color() {
-        colored = true;
-    }
-
-    /**
-     * Method that sets the colored value to false.
-     */
-    public void decolor() {
-        colored = false;
     }
 }

@@ -21,6 +21,10 @@ public class BinaryHeap implements Heap {
         heapSize = 0;
     }
 
+    /**
+     * Gets the size of the heap.
+     * @return heap size as int.
+     */
     public int getHeapSize() {
         return heapSize;
     }

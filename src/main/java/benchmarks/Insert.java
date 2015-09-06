@@ -41,9 +41,13 @@ public class Insert {
     public void insertBenchmark(int arraySize) {
         long binary = 0;
         long unary = 0;
+        long unaryIterative = 0;
         long binaryD = 0;
+        long binaryDIterative = 0;
         long ternary = 0;
+        long ternaryIterative = 0;
         long quaternary = 0;
+        long quaternaryIterative = 0;
         long binomial = 0;
         long fibonacci = 0;
         long leftist = 0;
@@ -60,9 +64,13 @@ public class Insert {
             PairingHeap pairingHeap = new PairingHeap();
             SkewHeap skewHeap = new SkewHeap();
             DHeap unaryHeap = new DHeap(arraySize, 1);
+            DHeapIterative unaryHeapIterative = new DHeapIterative(arraySize, 1);
             DHeap binaryHeapD = new DHeap(arraySize, 2);
+            DHeapIterative binaryHeapDIterative = new DHeapIterative(arraySize, 2);
             DHeap ternaryHeap = new DHeap(arraySize, 3);
+            DHeapIterative ternaryHeapIterative = new DHeapIterative(arraySize, 3);
             DHeap quaternaryHeap = new DHeap(arraySize, 4);
+            DHeapIterative quaternaryHeapIterative = new DHeapIterative(arraySize, 4);
             Treap treap = new Treap();
 
             long startTime = System.nanoTime();
@@ -89,10 +97,16 @@ public class Insert {
             insert(skewHeap);
             skew += (System.nanoTime() - startTime);
 
-            if (arraySize <= 10000) {
+            if (arraySize <= 30000) {
                 startTime = System.nanoTime();
                 insert(unaryHeap);
                 unary += (System.nanoTime() - startTime);
+            }
+
+            if (arraySize <= 50000) {
+                startTime = System.nanoTime();
+                insert(unaryHeapIterative);
+                unaryIterative += (System.nanoTime() - startTime);
             }
 
             startTime = System.nanoTime();
@@ -100,12 +114,24 @@ public class Insert {
             binaryD += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
+            insert(binaryHeapDIterative);
+            binaryDIterative += (System.nanoTime() - startTime);
+
+            startTime = System.nanoTime();
             insert(ternaryHeap);
             ternary += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
+            insert(ternaryHeapIterative);
+            ternaryIterative += (System.nanoTime() - startTime);
+
+            startTime = System.nanoTime();
             insert(quaternaryHeap);
             quaternary += (System.nanoTime() - startTime);
+
+            startTime = System.nanoTime();
+            insert(quaternaryHeapIterative);
+            quaternaryIterative += (System.nanoTime() - startTime);
 
             startTime = System.nanoTime();
             insert(treap);
@@ -120,9 +146,13 @@ public class Insert {
         pairing /= 10 * 1000000;
         skew /= 10 * 1000000;
         unary /= 10 * 1000000;
+        unaryIterative /= 10 * 1000000;
         binaryD /= 10 * 1000000;
+        binaryDIterative /= 10 * 1000000;
         ternary /= 10 * 1000000;
+        ternaryIterative /= 10 * 1000000;
         quaternary /= 10 * 1000000;
+        quaternaryIterative /= 10 * 1000000;
         treapTimer /= 10 * 1000000;
 
         System.out.println("Average inserting time when the number \nof the integers being inserted was " + arraySize + ":\n");
@@ -137,9 +167,17 @@ public class Insert {
         } else {
             System.out.println("Unary heap: Not tested as the size of array is too large.");
         }
+        if (arraySize <= 50000) {
+            System.out.println("Iterative unary heap: " + unaryIterative + " ms.");
+        } else {
+            System.out.println("Unary heap: Not tested as the size of array is too large.");
+        }
         System.out.println("BinaryD heap: " + binaryD + " ms.");
+        System.out.println("Iterative binaryD heap: " + binaryDIterative + " ms.");
         System.out.println("Ternary heap: " + ternary + " ms.");
+        System.out.println("Iterative ternary heap: " + ternaryIterative + " ms.");
         System.out.println("Quaternary heap: " + quaternary + " ms.");
+        System.out.println("Iterative Quaternary heap: " + quaternaryIterative + " ms.");
         System.out.println("Treap: " + treapTimer + " ms.");
         System.out.println();
         System.out.println();

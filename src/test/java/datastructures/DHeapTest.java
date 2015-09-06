@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
+
 public class DHeapTest {
 
     DHeap heap;
@@ -95,5 +97,35 @@ public class DHeapTest {
         Assert.assertEquals(2, heap.findMinNode().getValue());
         heap.decreaseKey(3, 1);
         Assert.assertEquals(1, heap.deleteMin().getValue());
+    }
+
+    @Test
+    public void InsertRemoveMinStressTest() {
+        DHeap heap = new DHeap(50000, 2);
+        Assert.assertTrue(heap.isEmpty());
+        Assert.assertEquals(0, heap.getHeapSize());
+        heap.insert(1);
+        Random random = new Random();
+        for (int ii = 1; ii <= 49999; ii++) {
+            int r = random.nextInt();
+            if (r < 0) {
+                r += Integer.MAX_VALUE;
+            }
+            heap.insert(r);
+        }
+        Assert.assertEquals(50000, heap.getHeapSize());
+        int ii = 1;
+        int count = 0;
+        while (!heap.isEmpty()) {
+            Node tmp = heap.deleteMin();
+            int v = tmp.getValue();
+            count++;
+            int vi = v;
+            Assert.assertTrue(vi >= ii);
+            ii = vi;
+        }
+        Assert.assertEquals(50000, count);
+        Assert.assertTrue(heap.isEmpty());
+        Assert.assertEquals(0, heap.getHeapSize());
     }
 }

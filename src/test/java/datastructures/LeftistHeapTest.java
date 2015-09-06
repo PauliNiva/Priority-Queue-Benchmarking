@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
+
 public class LeftistHeapTest {
 
     LeftistHeap heap;

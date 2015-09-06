@@ -7,13 +7,13 @@ import org.junit.Test;
 
 import java.util.Random;
 
-public class BinaryHeapTest {
+public class DHeapIterativeTest {
 
-    BinaryHeap heap;
+    DHeapIterative heap;
 
     @Before
     public void setUp() {
-        heap = new BinaryHeap(4);
+        heap = new DHeapIterative(4, 1);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class BinaryHeapTest {
 
     @Test
     public void insertAndHeapUpWorks() {
-        BinaryHeap heap = new BinaryHeap(8);
+        DHeap heap = new DHeap(8, 2);
         heap.insert(4);
         Assert.assertEquals(4, heap.findMinNode().getValue());
         heap.insert(5);
@@ -52,13 +52,17 @@ public class BinaryHeapTest {
 
     @Test
     public void removingMinWhenQueueIsNotEmpty() {
-        BinaryHeap heap = new BinaryHeap(8);
+        DHeap heap = new DHeap(8, 3);
         heap.insert(5);
         heap.insert(3);
         heap.insert(7);
         heap.insert(2);
         heap.insert(6);
         Assert.assertEquals(2, heap.deleteMin().getValue());
+        Assert.assertEquals(3, heap.deleteMin().getValue());
+        Assert.assertEquals(5, heap.deleteMin().getValue());
+        Assert.assertEquals(6, heap.deleteMin().getValue());
+        Assert.assertEquals(7, heap.deleteMin().getValue());
     }
 
     @Test
@@ -97,7 +101,7 @@ public class BinaryHeapTest {
 
     @Test
     public void InsertRemoveMinStressTest() {
-        BinaryHeap heap = new BinaryHeap(50000);
+        DHeapIterative heap = new DHeapIterative(50000, 2);
         Assert.assertTrue(heap.isEmpty());
         Assert.assertEquals(0, heap.getHeapSize());
         heap.insert(1);
