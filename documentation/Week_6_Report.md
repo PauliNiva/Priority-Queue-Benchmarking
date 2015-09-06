@@ -1,0 +1,5 @@
+This week I tried to correct problems with the fibonacci and binomial heap. Fibonacci heap should work correctly now, but I did not manage to repair the binomial heap. There where two kinds of problems with the binomial heap. DikstraBenchmark tests did not work and delete operation was flawed and it skipped elements when deleting. I managed to fix the delete operation, but did not manage to make it work with Dijkstra.
+
+Problem occurs when binomial heap is benchmarked (in tests) with Dijkstra as it goes through it's own test, but then Fibonacci heaps tests give null pointer exception. If I disable the Fibonacci heap test, then the pairing heaps test gives array out of bounds exception. When I disable the the binomial heap test, then Fibonacci and pairing heap tests go through without a hitch. Problem also occurs when main method is run and dijkstra benchmark for binomial heap is enabled. Then the program just hangs.
+
+Problems faced this week: I spent a better part of the week sick, with terrible flu and coughing my lungs out. I did what I could manage, but ultimately I am disappointed that I did not manage to fix all the problems before the deadline.
